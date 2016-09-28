@@ -1,7 +1,7 @@
 # SQUAD
 Standardized Qualitative Analysis of Dynamical Systems 
 
-The aim of the proyect is to give an updated version of the Standadized Qualitative Analysis of Dynamical Systems developed as that implemented in Martínez-Sosa in 2013 (1), as modified from the first version in Di Cara, 2007 (2).
+The aim of the proyect is to give an updated version of the Standadized Qualitative Analysis of Dynamical Systems developed as that implemented in Martínez-Sosa in 2013 (1), as modified from the first version in Di Cara, 2007 (2). The project is writen in R language.
 
 
 

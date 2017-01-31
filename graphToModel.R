@@ -1,4 +1,6 @@
-
+# Writen by Carlos Ramirez
+# January 30, 2017
+#  Mexico City
 
 # graphToModel() convert a matrix of conectivity to a Boolean regulatory network in BoolNet format.
 # Algorithm:

@@ -1,3 +1,7 @@
+# Written by Carlos Ramirez
+# January 30, 2017
+# Mexico City
+
 # asContinuous() transform a boolean regulatory network model in BooleanNet format to 
 # a continuous model object that can be supplied to ode() function from deSolve R package
 

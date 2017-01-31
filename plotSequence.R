@@ -1,3 +1,6 @@
+# Written by Carlos Ramirez
+# January 30, 2017
+# Mexico city
 
 #source("boolNetToSQUAD_14.R")
 

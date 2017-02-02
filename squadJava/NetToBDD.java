@@ -62,6 +62,11 @@ public class NetToBDD {
 	        	  disjBDD = disjBDD.or(disjunctive[i]);
 	          }
 	    	  networkBDD[nodeIndex] = disjBDD;
+	    	  /*
+	    	   * Make BDD a;
+	    	   *  a = F.nthVar(numberOfNodes + nodeIndex)
+	    	   *  take an OR of all a's to construct T
+	    	   * */
 	      }
 //////////////////////////////////////////////////////////////////////////////////////////
 	      return networkBDD[integerNode];

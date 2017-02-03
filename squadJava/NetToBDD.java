@@ -6,7 +6,7 @@ import net.sf.javabdd.BDD;
 import net.sf.javabdd.BDDFactory;
 
 public class NetToBDD {
-	  public static BDD netToBDD(int integerNode){
+	  public static BDD netToBDD(){
 		  int boolFunc[][] = {{0,1,0,0},{0,1},{1,0}};
 		  int netIndexes[][] = {{0,2},{0},{1}};
 		  BDDFactory F;
@@ -19,8 +19,8 @@ public class NetToBDD {
 /////////////////////////////////////////////////////////////////////////////////////////
 	      // modify this to construct T function
 	      for (int nodeIndex=0;nodeIndex<boolFunc.length;nodeIndex++){
-	          disjBool = boolFunc[integerNode];
-	    	  indexesBDD = netIndexes[integerNode];
+	          disjBool = boolFunc[nodeIndex];
+	    	  indexesBDD = netIndexes[nodeIndex];
 	    	  int n = indexesBDD.length;
 	    	  int N = (int)Math.pow(2, n);
 	          boolean conjBool[] = new boolean[n];
@@ -54,21 +54,43 @@ public class NetToBDD {
 	              disjunctive[i] = conjBDD;
 	          }
 	          /*
-	           * Here modify disjunctive to disjBDD[i] = disjBDD[i].or(node[j])
+	           * Here modify disjunctive to disjBDD[i] = disjBDD[i].and(node[j])
 	           *  for all node[j]  (i!=j)
 	           * */
 	          disjBDD = disjunctive[0];
 	          for (int i=1;i<disjunctive.length;i++){
 	        	  disjBDD = disjBDD.or(disjunctive[i]);
 	          }
-	    	  networkBDD[nodeIndex] = disjBDD;
-	    	  /*
-	    	   * Make BDD a;
-	    	   *  a = F.nthVar(numberOfNodes + nodeIndex)
-	    	   *  take an OR of all a's to construct T
-	    	   * */
+	          
+	          BDD disjBDD_next = F.nithVar(nodeIndex+boolFunc.length);
+        	  disjBDD_next = ( ( disjBDD.and(disjBDD_next.not() ).not()) )
+     			         .and( ( disjBDD_next.and(disjBDD.not()).not() ));
+	          
+	          // 
+	          for (int i=0;i<boolFunc.length;i++){
+	        	  if (i!=nodeIndex){
+		        	  BDD nodeBDD;
+		        	  BDD nextTimeNode;
+		        	  nodeBDD = F.nithVar(i);
+		        	  nextTimeNode = F.nithVar(boolFunc.length+i);
+		        	  nextTimeNode = ( ( nodeBDD.and(nextTimeNode.not() ).not()) )
+		        			     .and( ( nextTimeNode.and(nodeBDD.not()).not() ));
+	        		  disjBDD_next = disjBDD_next.and(nextTimeNode);
+	        	  }
+	          }
+	    	  networkBDD[nodeIndex] = disjBDD_next;
+	    	  
+	      }
+    	  /*
+    	   * Make BDD a;
+    	   *  a = F.nthVar(numberOfNodes + nodeIndex)
+    	   *  take an OR of all a's to construct T
+    	   * */
+	      netBDD = networkBDD[0];
+	      for (int i=1;i<boolFunc.length;i++){
+	    	  netBDD = netBDD.or(networkBDD[i]);
 	      }
 //////////////////////////////////////////////////////////////////////////////////////////
-	      return networkBDD[integerNode];
+	      return netBDD;
 	  }
 }

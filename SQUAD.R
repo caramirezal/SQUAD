@@ -17,9 +17,12 @@ library(BoolNet)
 library(reshape)
 
 # new functions
-source("https://github.com/caramirezal/SQUAD/blob/master/asContinuous.R")
-source("https://github.com/caramirezal/SQUAD/blob/master/plotSequence.R")
+source("https://raw.githubusercontent.com/caramirezal/SQUAD/master/asContinuous.R")
+source("https://raw.githubusercontent.com/caramirezal/SQUAD/master/plotSequence.R")
 #source("graphToModel.R")
 #source("plotSequence.R")
 #source("randomGraph.R")
 #source("usefulFunctions.R")
+
+net <- loadNetwork("regulatoryNetworkGMPModel.txt")
+plotSequence.sq(net,initialState = generateState(net,specs = c("cebpa"=1)),format = "timeserie")

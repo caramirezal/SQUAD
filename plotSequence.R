@@ -9,9 +9,9 @@
 
 # select colors for plotting
 selectedColors<-function(){
-  colores<-c("gray","green","orange","red","blue","darkmagenta","darkturquoise","brown",
-             "yellow","darkgreen","pink","black","magenta")
-  return(c(colores,colores))
+        colores <- c("gray","green","orange","red","blue","darkmagenta","darkturquoise","brown",
+                   "yellow","darkgreen","pink","black","magenta")
+        return(c(colores,colores))
 }
 
 
@@ -20,6 +20,9 @@ selectedColors<-function(){
 # plot time serie as a heatmap
 heatmapSQUAD<-function(net,initialState="random",indexes="default",parameters="default",
                        timePeriod=7.5,lengthInterval=0.01){
+        if ( class(net) != "BooleanNetwork" ) {
+                stop("A net object of class BooleanNetwork most be provided!")
+        }
   times=seq(0,timePeriod,by = lengthInterval)
   if (length(initialState)==1) { 
     if (initialState=="random"){
@@ -38,6 +41,8 @@ heatmapSQUAD<-function(net,initialState="random",indexes="default",parameters="d
     }
   }
   times=seq(0,timePeriod,by = lengthInterval)
+  # Usar ...
+  # agregar opciones BooleanNetwork y SQUAD
   dynamic<-ode(y=initialState,times=times,func=asContinuous(net),parms = parameters,atol=10e-6, rtol=10e-6)
   if ( 1 == length(indexes)){
     if ( indexes == "default"  ) {

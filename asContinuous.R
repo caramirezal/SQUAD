@@ -42,7 +42,7 @@ eval.input<-function(plantilla,state){
                         print("Error: Non Boolean value")
                 }
         }
-  return(new.state)
+        return(new.state)
 }
 
 
@@ -115,7 +115,7 @@ extractw<-function(net,state){
 
 # squad generic function
 SQUAD<-function(x,w,gamma,h){
-        val<- ((-exp(0.5*h) + exp(-h*(w-0.5))) / ((1-exp(0.5*h)) * (1+exp(-h*(w-0.5))))) - (gamma*x)
+        val <- ((-exp(0.5*h) + exp(-h*(w-0.5))) / ((1-exp(0.5*h)) * (1+exp(-h*(w-0.5))))) - (gamma*x)
         return(val)
 }
 

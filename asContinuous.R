@@ -128,9 +128,6 @@ asContinuous<-function(net){
         if ( class(net) != "BooleanNetwork") {
                 stop("A net object of class BooleanNetwork most be provided!")
         } 
-        # parameters will be given as a list = {h,gamma}
-        # function most take parameters
-        # if parameters are default you can use the next function
         network <- function(times,state,parameters=parameters) {
                 with(as.list(c(state,parameters)),{
                 geneNames <- net$genes
@@ -156,7 +153,8 @@ asContinuous<-function(net){
                 return(list(newState.vect))
                 })
         }
-  return(network)
+        class(network) <- "SQUAD"
+        return(network)
 }
 
 

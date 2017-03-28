@@ -128,9 +128,8 @@ asContinuous<-function(net){
         if ( class(net) != "BooleanNetwork") {
                 stop("A net object of class BooleanNetwork most be provided!")
         } 
-        network <- function(times,state,parameters=parameters) {
+        network <- function(times,state,parameters) {
                 with(as.list(c(state,parameters)),{
-                geneNames <- net$genes
                 newState.vect<-rep(0,length(geneNames))
                 # Definition of parameters h, w and gamma.
                 if (length(parameters)==1) { 

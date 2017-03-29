@@ -4,14 +4,7 @@
 
 library(deSolve)
 
-## define a function input for ode solver importing w parameters of SQUAD format
-loadNetworkSQUAD <- function(file,fixed="default"){
-        rules <- read.csv(file,header = T,colClasses = "character",sep = ";")
-        if ( ! ( ("targets" == colnames(rules)[1]) && ("factors" == colnames(rules)[2]) ) ) {
-                stop("Please, provide a valid SQUAD format")
-        }
-        rules
-}
+
 
 
 ####################################################################################################
@@ -26,28 +19,84 @@ SQUAD<-function(x,w,gamma,h){
 
 
 ## parse w equations into a deSolve function
-wToSQUAD <- function(genes,wExpressions){
+wToSQUAD <- function(genes,wExpressions,fixed="default"){
 
        squadODEs <- function(times,state,parameters){
                 with(as.list(c(state,parameters)), {
-                        for (i in 1:length(net$targets)) {
-                                assign(net$targets[i],state[i])
+                        for (i in 1:length(genes)) {
+                                assign(genes[i],state[i])
                         }
-                        w <- sapply(net$factors, function(x) eval(parse(text=x)))
-                        evalSQUAD <- sapply(1:length(net$targets),
-                                            function(i) SQUAD(x = state[i], w= w[i],
-                                                              gamma = 1, h = 50))
-                        names(evalSQUAD) <- net$targets
+                        w <- sapply(wExpressions, function(x) eval(parse(text=x)))
+                        if (length(parameters)==1) {
+                                if (parameters=="default") {
+                                        evalSQUAD <- sapply(1:length(genes), function(i) SQUAD(x = state[i], w= w[i],
+                                                                                               gamma = 1, h = 50))
+                                }
+                        } else {
+                                evalSQUAD <- sapply(1:length(genes), function(i) SQUAD(x = state[i], w= w[i],
+                                                                                       gamma = gamma[i], h = h[i]))
+                        }
+                        names(evalSQUAD) <- genes
+                        if (length(fixed)==1) {
+                                if (fixed != "default") {
+                                        i <- names(fixed)
+                                        evalSQUAD[i] <- 0
+                                }
+                        } else {
+                                for (i in names(fixed)) {
+                                        evalSQUAD[i] <- 0 
+                                }
+                        }
                         return(list(evalSQUAD))
                 })
-       }
-        squadODEs
+        }
+
+       squadODEs        
+
 }
 
+
+######################################################################################################################################
+
+## defines a function input for ode solver importing w parameters of SQUAD format
+loadNetworkSQUAD <- function(file,fixed="default"){
+        net <- read.csv(file,header = T,colClasses = "character",sep = ";")
+        if ( ! ( ("targets" == colnames(net)[1]) && ("factors" == colnames(net)[2]) ) ) {
+                stop("Please, provide a valid SQUAD format")
+        }
+        
+        squadODEs <- wToSQUAD(net$targets,net$factors,fixed = fixed)
+        
+        if (length(fixed)==1){
+                if (fixed=="default"){
+                        fixedGenesVal <- rep(-1, length(net$targets))
+                        names(fixedGenesVal)<-net$targets
+                }
+        } else {
+                if ( ! (length(fixed)<=length(net$factors)) ) {
+                        stop("Error: More fixed genes than the actual gene nodes number!")
+                }
+                fixedGenesVal <- rep(-1, length(net$targets))
+                names(fixedGenesVal) <- net$targets
+                for (i in names(fixed)) {
+                        fixedGenesVal[i] <- fixed[[i]] 
+                }
+        }
+        list("genes"=net$targets,"fun"=squadODEs,"fixed"=fixedGenesVal)
+}
+
+
+####################################################################################################################################
+
 #set.seed(1000)
-net <- loadNetworkSQUAD("cartoonNetworkSQUAD.R")
-state <- runif(length(net$targets))
-squadInteractions <- wToSQUAD(net$targets,net$factors)
-times <- seq(0,50,by=0.5)
-parameters <- list()
+net <- loadNetworkSQUAD("cartoonNetworkSQUAD.R",fixed=list("A"=0.3,"B"=0))
+state <- runif(length(net$genes))
+squadInteractions <- net$fun
+times <- seq(0,10,by=0.5)
+h <- c(30,40,50)
+gamma <- c(0.8,1,1.2) 
+parameters <- list(h,gamma)
 result<-ode(y=state,times=times,func=squadInteractions,parms = parameters,atol=10e-6, rtol=10e-6)
+plot(result[,1],result[,2])
+result
+

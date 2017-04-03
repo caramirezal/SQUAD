@@ -7,7 +7,7 @@ library(BoolNet)
 getAttractorsAsynchronous <- function(net){
         ## checks arguments
         if ( class(net) != "BooleanNetwork" ) {
-                stop("A net object of Boolean Network class most be provided!")
+                stop("A net object of class BooleanNetwork most be provided!")
         }
         
         ## export net in boolnet to sbml format
@@ -26,6 +26,6 @@ getAttractorsAsynchronous <- function(net){
 }
 
 
-getAttractorsAsynchronous(net)
+#getAttractorsAsynchronous(net)
 
 

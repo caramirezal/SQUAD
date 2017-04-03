@@ -2,7 +2,7 @@
 ## Mexico City
 ## Written by Carlos
 
-library(deSolve)
+#library(deSolve)
 
 
 
@@ -84,19 +84,4 @@ loadNetworkSQUAD <- function(file,fixed="default"){
         }
         list("genes"=net$targets,"fun"=squadODEs,"fixed"=fixedGenesVal)
 }
-
-
-####################################################################################################################################
-
-#set.seed(1000)
-net <- loadNetworkSQUAD("cartoonNetworkSQUAD.R",fixed=list("A"=0.3,"B"=0))
-state <- runif(length(net$genes))
-squadInteractions <- net$fun
-times <- seq(0,10,by=0.5)
-h <- c(30,40,50)
-gamma <- c(0.8,1,1.2) 
-parameters <- list(h,gamma)
-result<-ode(y=state,times=times,func=squadInteractions,parms = parameters,atol=10e-6, rtol=10e-6)
-plot(result[,1],result[,2])
-result
 

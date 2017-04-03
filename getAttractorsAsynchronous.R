@@ -1,7 +1,7 @@
 ## March 26, 2017. Mexico City
 ## Written by Carlos Ramirez
 
-library(BoolNet)
+#library(BoolNet)
 
 # getAttractors() performs the asynchronous stable states search by calling GINSIM
 getAttractorsAsynchronous <- function(net){

@@ -152,8 +152,13 @@ asContinuous<-function(net){
                 return(list(newState.vect))
                 })
         }
-        class(network) <- "SQUAD"
-        return(network)
+        
+        res <- list("genes" = net$genes, "fun"=network,
+                    "fixed" = net$fixed)
+        
+        class(res) <- "SQUAD"
+        
+        res
 }
 
 

@@ -45,7 +45,7 @@ squad <- function(net,initialState="random",indexes="default",
                              parms = parameters,atol=10e-6, rtol=10e-6)
         }
         if (class(net) == "SQUAD") {
-                dynamic<-ode(y=initialState,times=times,func=net,
+                dynamic<-ode(y=initialState,times=times,func=net$fun,
                              parms = parameters,atol=10e-6, rtol=10e-6)
         }
         if ( 1 == length(indexes)){

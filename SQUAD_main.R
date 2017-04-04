@@ -23,6 +23,13 @@ source("https://raw.githubusercontent.com/caramirezal/SQUAD/master/getAttractors
 source("https://raw.githubusercontent.com/caramirezal/SQUAD/master/squad.R")
 
 
+if ( ! ( "GINsim-2.9.4-with-deps.jar" %in% list.files() ) ) {
+        download.file("http://ginsim.org/sites/default/files/ginsim-dev/GINsim-v2.9.4.tgz")
+}
+
+if ( ! ( "GetAttractors.java" %in% list.files() ) ) {
+        download.file("https://raw.githubusercontent.com/caramirezal/SQUAD/master/GetAttractors.java")
+}
 
 #source("graphToModel.R")
 #source("plotSequence.R")

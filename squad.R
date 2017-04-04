@@ -41,7 +41,8 @@ squad <- function(net,initialState="random",indexes="default",
         # Usar ...
         # agregar opciones BooleanNetwork y SQUAD
         if (class(net) == "BooleanNetwork") {
-                dynamic<-ode(y=initialState,times=times,func=asContinuous(net),
+                net.sq <- asContinuous(net)
+                dynamic<-ode(y=initialState,times=times,func=net.sq$fun,
                              parms = parameters,atol=10e-6, rtol=10e-6)
         }
         if (class(net) == "SQUAD") {

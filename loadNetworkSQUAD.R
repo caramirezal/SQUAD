@@ -55,6 +55,22 @@ wToSQUAD <- function(genes,wExpressions,fixed="default"){
 
 }
 
+#####################################################################################################
+
+## get the regulators of the nodes by checking if the names of the nodes
+## are in the string of the corresponding ODE continuous function
+getRegulators.sq <- function(net.df) {
+        res <- list()
+
+        for (i in 1:length(net.df$targets)) {
+                regulators <- net.df$factors[i]
+                #for (j in 1:length(net.df$targets)) {
+                res[[i]] <- regulators
+                #}
+        }
+        res
+}
+
 
 ######################################################################################################################################
 
@@ -82,6 +98,16 @@ loadNetworkSQUAD <- function(file,fixed="default"){
                         fixedGenesVal[i] <- fixed[[i]] 
                 }
         }
-        list("genes"=net$targets,"fun"=squadODEs,"fixed"=fixedGenesVal)
+        
+        regulators <- getRegulators.sq(net.df = net)
+        
+        net.sq <- list("genes"=net$targets,"fun"=squadODEs,
+             "fixed"=fixedGenesVal,"regulators"=regulators)
+        
+        class(net.sq) <- "SQUAD"
+        
+        net.sq
 }
 
+
+#net <- loadNetworkSQUAD(file = "cartoonNetworkSQUAD.R")

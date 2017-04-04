@@ -18,7 +18,7 @@ selectedColors<-function(){
 ###########################################################################################################################
 
 # plot time serie as a heatmap
-heatmapSQUAD<-function(net,initialState="random",indexes="default",
+squad <- function(net,initialState="random",indexes="default",
                        parameters="default",
                        timePeriod=7.5,lengthInterval=0.01){
         if ( (class(net) != "BooleanNetwork") && (class(net) != "SQUAD") ) {

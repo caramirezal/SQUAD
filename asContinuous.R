@@ -130,7 +130,7 @@ asContinuous<-function(net){
         } 
         network <- function(times,state,parameters) {
                 with(as.list(c(state,parameters)),{
-                newState.vect<-rep(0,length(geneNames))
+                newState.vect<-rep(0,length(net$genes))
                 # Definition of parameters h, w and gamma.
                 if (length(parameters)==1) { 
                         if (parameters=="default") {
@@ -143,12 +143,12 @@ asContinuous<-function(net){
                         gamma<-parameters[[2]]
                 }
                 w <- extractw(net,state)
-                names(w) <- geneNames
+                names(w) <- net$genes
                 # applying SQUAD
-                for (i in 1:length(geneNames)){
+                for (i in 1:length(net$genes)){
                         newState.vect[i]<-SQUAD(x=state[i],w=w[i],gamma = gamma[i],h=h[i])
                 }
-                names(newState.vect)<-geneNames
+                names(newState.vect)<-net$genes
                 return(list(newState.vect))
                 })
         }

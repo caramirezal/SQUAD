@@ -23,9 +23,9 @@ source("https://raw.githubusercontent.com/caramirezal/SQUAD/master/getAttractors
 source("https://raw.githubusercontent.com/caramirezal/SQUAD/master/squad.R")
 
 
-if ( ! file.exists( "GINsim-v2.9.4.tgz" ) ) {
-        download.file("http://ginsim.org/sites/default/files/ginsim-dev/GINsim-v2.9.4.tgz",
-                      destfile="GINsim-v2.9.4.tgz")
+if ( ! file.exists( "GINsim-2.9.4-with-deps.jar" ) ) {
+        download.file("http://ginsim.org/sites/default/files/GINsim-2.9.4-with-deps.jar",
+                      destfile="GINsim-2.9.4-with-deps.jar")
 }
 
 if ( ! file.exists( "GetAttractors.java" ) ) {

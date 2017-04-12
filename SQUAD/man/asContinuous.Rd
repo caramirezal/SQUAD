@@ -36,9 +36,9 @@ state <- generateState(cellCycle,specs=c("CycA"=1,"CycD"=1))
 # setting intervals for numerical integration 
 times <- seq(min=0,max=1,seq.out=100)
 cellCycle.s <- asContinuous(cellCycle) 
-simulations <- ode(y=state, fun=cellCycle.s\\$fun, times=times,
+simulations <- ode(y=state, fun=cellCycle.s$fun, times=times,
                    parameters = "default") 
-> \\# note that cellCycle\\$fun can be given as the function
-> \\# parameter to ode solver method 
-> simulations
+# note that cellCycle$fun can be given as the function
+# parameter to ode solver method 
+simulations
 }

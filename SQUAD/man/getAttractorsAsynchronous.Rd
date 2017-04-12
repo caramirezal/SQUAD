@@ -4,7 +4,7 @@
 \alias{getAttractorsAsynchronous}
 \title{getAttractors calculates all asynchronous attractors of a Boolean Regulatory Network model}
 \usage{
-getAttractorsAsynchronous()
+getAttractorsAsynchronous(net)
 }
 \description{
 getAttractors calculates all asynchronous attractors of a Boolean Regulatory Network model

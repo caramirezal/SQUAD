@@ -5,7 +5,7 @@
 #' also to simulate gain/loss of function mutants. It returns a trajectory of the system
 #' in different formats
 #' @name squad
-#' @export
+#' @export squad
 #' @param net an object of class "BooleanNetwork" or "SQUAD"
 #' @param initialState a vector of variables that belongs to the interval $[0,1]$ which
 #' serves as initial values for the ODE system simulation.
@@ -16,15 +16,17 @@
 #' developed by Soetaert, 2010.
 #' 
 #' @examples 
-#' data(cellCycle)
-#' net.sq <- asContinuous(cellCycle)
-#' initialState <- runif(length(cellCycle$genes),0,1) 
-#' times <- seq(0,10,by=0.5)   
-#' h <- rep(50,length(cellCycle$genes))     
-#' gamma <- rep(1,length(cellCycle$genes))     
-#' parameters <- list(h,gamma)  
-#' squad(net.sq)
-
+#' net <- loadNetwork("cartoonNetwork.R")
+#' getAttractorsAsynchronous(net)
+#' data("cellcycle")
+#' net.sq <- asContinuous(cellcycle) 
+#' initialState <- runif(length(cellcycle$genes),0,1)
+#' times <- seq(0,10,by=0.5)    
+#' h <- rep(50,length(cellcycle$genes))       
+#' gamma <- rep(1,length(cellcycle$genes))      
+#' parameters <- list(h,gamma)     
+#' sim <- squad(net.sq)
+#' sim 
 
 
 ############################################################################################################################

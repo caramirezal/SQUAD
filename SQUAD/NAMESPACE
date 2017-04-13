@@ -2,3 +2,4 @@
 
 export(asContinuous)
 export(getAttractorsAsynchronous)
+export(selectedColors)

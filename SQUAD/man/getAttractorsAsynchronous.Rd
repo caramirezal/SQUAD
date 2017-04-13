@@ -2,10 +2,31 @@
 % Please edit documentation in R/getAttractorsAsynchronous.R
 \name{getAttractorsAsynchronous}
 \alias{getAttractorsAsynchronous}
-\title{getAttractors calculates all asynchronous attractors of a Boolean Regulatory Network model}
+\title{Calculations of asynchronous steady state attractors of a Boolean Network}
 \usage{
 getAttractorsAsynchronous(net)
 }
+\arguments{
+\item{net}{an object of class "BooleanNetwork" as that defined by the loadNetwork() function
+of BoolNet R package}
+}
+\value{
+a data frame with numerical binary values of the attractors
+}
 \description{
+Finds all asynchronous stationary states of a Boolean Regulatory Network model. 
+Takes as arguments an object of the "BoolNet" (or "SQUAD" under construction) and returns a 
+data frame which contains the attractors of the model.
+}
+\details{
 getAttractors calculates all asynchronous attractors of a Boolean Regulatory Network model
+
+
+The function is straightforward. It calls the ginsim library written by Naldi and 
+colleagues, 2009 \cite{naldi2009logical}.
+}
+\examples{
+data(cellCycle) 
+attractors <- getAttractorsAsynchronous(cellCycle)
+attractors
 }

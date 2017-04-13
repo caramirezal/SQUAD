@@ -2,4 +2,3 @@
 
 export(asContinuous)
 export(getAttractorsAsynchronous)
-export(helloJavaWorld)

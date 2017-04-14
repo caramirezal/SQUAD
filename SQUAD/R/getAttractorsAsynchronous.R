@@ -18,7 +18,7 @@
 #' @usage 
 #' getAttractorsAsynchronous(net)
 #' @name getAttractorsAsynchronous
-#' @export
+#' @export getAttractorsAsynchronous
 
 getAttractorsAsynchronous <- function(net) {
         ## checks arguments
@@ -32,6 +32,9 @@ getAttractorsAsynchronous <- function(net) {
         ## calling the SSSearcher java script 
         searcher <- .jnew("SSSearcher")
         res <- .jcall(searcher,"[[B","getAttractors")
+        
+        file.remove("regulatoryNetworkModel.sbml")
+        
         attractors <- list()
         #as.numeric(.jevalArray(res[[1]]))
         

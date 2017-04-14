@@ -51,7 +51,7 @@ public class SSSearcher {
 			*/
 			
 			int nrow = model.getRowCount();
-			int ncol = model.getState(1).length;
+			int ncol = model.getState(0).length;
 			byte res[][] = new byte[nrow][ncol];
 			
 			for (int i=0;i<nrow;i++){

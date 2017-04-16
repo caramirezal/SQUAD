@@ -26,6 +26,10 @@ getAttractorsAsynchronous <- function(net) {
                 stop("A net object of class BooleanNetwork most be provided!")
         }
         
+        if (file.exists("regulatoryNetworkModel.sbml")) {
+                file.remove("regulatoryNetworkModel.sbml")
+        }
+        
         ## export net in boolnet to sbml format stored in the workspace file
         toSBML(network = net,file = "regulatoryNetworkModel.sbml")
         

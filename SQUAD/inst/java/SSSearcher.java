@@ -36,22 +36,13 @@ public class SSSearcher {
 			StableTableModel model;
 			model = new StableTableModel(Net);			
 			model.setResult(sss.getMDDManager(), sss.getResult() );
-
-                        /*
-			for (int i=0;i<model.getRowCount();i++){
-				//System.out.println("State: "+Arrays.toString(model.getState(i)));
-				for (int j=0;j<model.getState(i).length;j++){
-					System.out.print(model.getState(i)[j]);
-					if ( j < ( model.getState(i).length - 1 ) ) {
-						System.out.print(",");
-						}
-					}
-				System.out.println();
-			}
-			*/
 			
 			int nrow = model.getRowCount();
+			System.out.println("nrow "+ nrow);
+			// This needs to be modified
 			int ncol = model.getState(0).length;
+			System.out.println("ncol "+ ncol);
+			
 			byte res[][] = new byte[nrow][ncol];
 			
 			for (int i=0;i<nrow;i++){

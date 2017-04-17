@@ -42,16 +42,25 @@ getAttractorsAsynchronous <- function(net) {
         attractors <- list()
         #as.numeric(.jevalArray(res[[1]]))
         
-        for (i in 1:length(res)) {
-                # cat(as.numeric(.jevalArray(res[[i]])),"\n")
-                attractors[[i]] <- as.numeric(.jevalArray(res[[i]]))
+        if ( length(res) > 0 ) {
+                for (i in 1:length(res)) {
+                        # cat(as.numeric(.jevalArray(res[[i]])),"\n")
+                        attractors[[i]] <- as.numeric(.jevalArray(res[[i]]))
+                }
+                
+                attractors <- as.data.frame(attractors)
+                attNames <- paste("Attr.",1:length(attractors),sep = "")
+                colnames(attractors) <- attNames
+                rownames(attractors) <- net$genes
+                
+                return(attractors)
+        }
+
+        if ( length(res) <= 0 ) {
+                
+                print("No fixed points found! ")
         }
         
-        
-        attractors <- as.data.frame(attractors)
-        attNames <- paste("Attr.",1:length(attractors),sep = "")
-        colnames(attractors) <- attNames
-        rownames(attractors) <- net$genes
-        
-        attractors
+        ##attractors
+
 }

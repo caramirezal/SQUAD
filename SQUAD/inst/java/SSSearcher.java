@@ -28,9 +28,9 @@ public class SSSearcher {
 			// Running the method
 			sss.run();
 			System.out.println(sss.getStatus());
-			StableTableModel statStates;
-			statStates = new StableTableModel(Net);			
-			statStates.setResult(sss.getMDDManager(), sss.getResult() );
+			//StableTableModel statStates;
+			//statStates = new StableTableModel(Net);			
+			//statStates.setResult(sss.getMDDManager(), sss.getResult() );
 			
 			// setting the results in the model object
 			StableTableModel model;
@@ -39,20 +39,34 @@ public class SSSearcher {
 			
 			int nrow = model.getRowCount();
 			System.out.println("nrow "+ nrow);
+			
+			byte res[][] = new byte[nrow][];
+			
 			// This needs to be modified
-			int ncol = model.getState(0).length;
-			System.out.println("ncol "+ ncol);
+			if ( nrow > 0 ) {
+			        
+			        int ncol = model.getState(0).length;
+			        System.out.println("ncol "+ ncol);
 			
-			byte res[][] = new byte[nrow][ncol];
+			        res = new byte[nrow][ncol];
 			
-			for (int i=0;i<nrow;i++){
-				for (int j=0;j<ncol;j++){
-					res[i][j] = model.getState(i)[j];
-				}
+			        for (int i=0;i<nrow;i++){
+				        for (int j=0;j<ncol;j++){
+					        res[i][j] = model.getState(i)[j];
+				        }
+			        }
+			        
 			}
 			
-			return(res);
+			if ( nrow <= 0 ) {
+			        
+			        res = new byte[0][0];
+			        
+			        //System.out.println("No fixed points found! Maybe all solutions are cycles");
+			        
+			}
 			
+			return res;
 			
 		}
 

@@ -10,7 +10,7 @@
 #' @param initialState a vector of variables that belongs to the interval $[0,1]$ which
 #' serves as initial values for the ODE system simulation.
 #' @param parameters a list containing two vectors of length n. Where n is the number of nodes
-#' of the network. The vectors are the $\beta$ and $\gamma$ parameters as that defined in 
+#' of the network. The vectors are the beta and gamma parameters as that defined in 
 #' Mart\'inez-Sosa, 2013.
 #' @param ... the parameters of ode() solver function defined in the deSolve R Package 
 #' developed by Soetaert, 2010.

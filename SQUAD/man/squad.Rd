@@ -14,7 +14,7 @@ selectedColors()
 serves as initial values for the ODE system simulation.}
 
 \item{parameters}{a list containing two vectors of length n. Where n is the number of nodes
-of the network. The vectors are the $\beta$ and $\gamma$ parameters as that defined in 
+of the network. The vectors are the beta and gamma parameters as that defined in 
 Mart\'inez-Sosa, 2013.}
 
 \item{...}{the parameters of ode() solver function defined in the deSolve R Package 

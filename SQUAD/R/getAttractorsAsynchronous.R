@@ -53,6 +53,13 @@ getAttractorsAsynchronous <- function(net,returnPlot=FALSE) {
                 colnames(attractors) <- attNames
                 rownames(attractors) <- net$genes
                 
+                if ( returnPlot == TRUE )  {
+                        
+                        plotAttractors.sq(attractors)
+                        
+                }
+                
+                return(attractors)
 
         }
 
@@ -61,14 +68,6 @@ getAttractorsAsynchronous <- function(net,returnPlot=FALSE) {
                 print("No fixed points found!")
         }
         
-        if ( returnPlot == TRUE ) {
-                
-                plotAttractors.sq(attractors)
-                
-        }
-                
-        return(attractors)
-
 }
 
 

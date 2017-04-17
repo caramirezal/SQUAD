@@ -10,7 +10,7 @@ import org.ginsim.service.tool.stablestates.StableStatesService;
  
 
 public class SSSearcher {
-		public static byte[][] getAttractors(){
+		public static int[][] getAttractors(){
 			
 			// Importing sbml file to ginsim
 			RegulatoryGraph Net;
@@ -40,7 +40,7 @@ public class SSSearcher {
 			int nrow = model.getRowCount();
 			System.out.println("nrow "+ nrow);
 			
-			byte res[][] = new byte[nrow][];
+			int res[][] = new int[nrow][];
 			
 			// This needs to be modified
 			if ( nrow > 0 ) {
@@ -48,7 +48,7 @@ public class SSSearcher {
 			        int ncol = model.getState(0).length;
 			        System.out.println("ncol "+ ncol);
 			
-			        res = new byte[nrow][ncol];
+			        res = new int[nrow][ncol];
 			
 			        for (int i=0;i<nrow;i++){
 				        for (int j=0;j<ncol;j++){
@@ -60,9 +60,9 @@ public class SSSearcher {
 			
 			if ( nrow <= 0 ) {
 			        
-			        res = new byte[0][0];
+			        res = new int[0][0];
 			        
-			        //System.out.println("No fixed points found! Maybe all solutions are cycles");
+			        System.out.println("No fixed points found! Maybe all solutions are cycles");
 			        
 			}
 			

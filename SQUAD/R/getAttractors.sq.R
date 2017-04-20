@@ -1,4 +1,4 @@
-#' getAttractors calculates all asynchronous attractors of a Boolean Regulatory Network model
+#' getAttractors.sq calculates all asynchronous attractors of a Boolean Regulatory Network model
 #' @title 
 #' Calculations of asynchronous steady state attractors of a Boolean Network
 #' @description 
@@ -7,20 +7,20 @@
 #' data frame which contains the attractors of the model. 
 #' @details 
 #' The function is straightforward. It calls the ginsim library written by Naldi and 
-#' colleagues, 2009 \cite{naldi2009logical}. 
+#' colleagues, 2009 naldi2009logical. 
 #' @param net an object of class "BooleanNetwork" as that defined by the loadNetwork() function
 #' of BoolNet R package
 #' @examples 
 #' data(cellCycle) 
-#' attractors <- getAttractorsAsynchronous(cellCycle)
+#' attractors <- getAttractors.sq(cellCycle)
 #' attractors
 #' @return a data frame with numerical binary values of the attractors
 #' @usage 
-#' getAttractorsAsynchronous(net)
-#' @name getAttractorsAsynchronous
-#' @export getAttractorsAsynchronous
+#' getAttractors.sq(net)
+#' @name getAttractors.sq
+#' @export getAttractors.sq
 
-getAttractorsAsynchronous <- function(net,returnPlot=FALSE) {
+getAttractors.sq <- function(net,returnPlot=FALSE) {
         ## checks arguments
         if ( class(net) != "BooleanNetwork" ) {
                 stop("A net object of class BooleanNetwork most be provided!")

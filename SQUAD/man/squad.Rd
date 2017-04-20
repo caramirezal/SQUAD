@@ -2,10 +2,10 @@
 % Please edit documentation in R/squad.R
 \name{squad}
 \alias{squad}
-\alias{selectedColors}
 \title{squad performs simulations of regulatory network models using the SQUAD methodology}
 \usage{
-selectedColors()
+squad(net, initialState = "random", parameters = "default",
+  timePeriod = 7.5, lengthInterval = 0.01, ...)
 }
 \arguments{
 \item{net}{an object of class "BooleanNetwork" or "SQUAD"}

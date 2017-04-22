@@ -1,126 +1,52 @@
-
-heatmap.sq <- function(sim, indexes="default") {
+#' function similar to plotSequence() in boolnet. Plot the time serie of the regulatory network based on SQUAD method
+#' in various formats (heatmap and time-serie)
+#' @description  Plot trajectories of continuous interpolation of boolean regulatory network models.
+#' @name plotSequence.sq 
+#' @export plotSequence.sq 
+#' @param net an object of the class "squad" as that defined by asContinuous(). Or alternatively, an object of the class
+#' "BoolNet" as the result of applying the loadNetwork() function of the BoolBet  R Package.
+#' @param initialState  a vector of length equal to the number of nodes in the network. The entries of the vectors
+#' are real values in the interval [0,1]. If no initial States are provided a random state is generated.
+#' @param indexes a vector of length less or equal to the number of nodes in the network. The entries of the vector are
+#' the indexes of the nodes to be plotted. Default values are the first 13 nodes of the network. The maximum printable
+#' number of nodes curves are 13.
+#' @param parameters a list with to vectors. Each vector has length equal to the number of nodes of the network.
+#' The vectors correspond to h and gamma parameters needed to define the squad ODE system as that defined in 
+#' Mart\'inez-Sosa, 2013.
+#' @param timePeriod the virtual time duration of the simulation.
+#' @param lengthInterval the time steps for integration to be shown. The lesser length interval provided the better
+#' resolution of the curves would be.
+#' @param ... additional parameters passed to ode() solver function defined in the deSolve R Package 
+#' developed by Soetaert, 2010.
+#' @examples 
+#' library(SQUAD)
+#' data("cellcycle")
+#' cellcycle.sq <- asContinuous(cellcycle)
+#' plotSequence.sq(cellcycle.sq,initialState = generateState(cellcycle,specs = c("CycD"=1)),
+#'                 format = "heatmap")
+#' 
+#' 
+plotSequence.sq<-function(net,initialState="random",indexes="default",parameters="default",
+                          timePeriod=10,lengthInterval=0.01,format="heatmap",...){
         
-        correctDefault <- ( length(indexes) == 1 ) && ( indexes == "default" ) 
+        sim <- squad(net, initialState=initialState, parameters=parameters,
+                     timePeriod=timePeriod, lengthInterval=lengthInterval, ...)
         
-        correctIndexes <- ( length(indexes) <= length(sim) )  && ( class(indexes) %in% c("numeric","integer")  )
-        
-        if ( ! ( correctDefault | correctIndexes  ) ) {
+        if ( format == "heatmap") {
                 
-                stop("Indexes most be a vector numeric round numbers or integers of length less than the number of nodes ")       
+                heatmap.sq(sim = sim,indexes = indexes)
+                
+        } else if ( format == "timeserie" ) {
+                
+                timeSerie.sq(dynamic = sim,indexes = indexes)
+                
+        } else {
+                
+                cat("Please select a valid format: 'heatmap' or 'timeserie'","\n")
         }
         
-        if ( correctDefault ){
-                
-                if ( indexes == "default"  ) {
-                        
-                        sim <- sim[,2:length(sim[1,])]
-                        heatmap(sim,Rowv = NA,Colv = NA,
-                                col=colorRampPalette(c("black","green"))(6))
-                }
-        }
         
-        if (  correctIndexes ) {
-                
-                heatmap(sim[,indexes],Rowv = NA,Colv = NA,
-                        col=colorRampPalette(6))
-                
-        }
 }
-
-############################################################################################################################
-
-## separar una funcion de heatmap y otra de timeSeries
-
-# plot regulatory network dynamic as a time serie
-timeSerie.sq <- function(dynamic,indexes="default") {
-        
-        times <- dynamic[,1]
-        
-        dynamic <- dynamic[,2:length(dynamic[1,])]
-        
-        correctDefault <- ( length(indexes) == 1 ) && ( indexes == "default" ) 
-        
-        correctIndexes <- ( length(indexes) <= length(sim) )  && ( class(indexes) %in% c("numeric","integer")  )
-        
-        if ( ! ( correctDefault | correctIndexes  ) ) {
-                
-                stop("Indexes most be a vector numeric round numbers or integers of length less than the number of nodes ")       
-        }
-        
-        par(mar=c(3, 3, 3, 6),xpd=TRUE)
-        
-        colores <- selectedColors()
-        
-        if ( correctDefault ) {
-                
-                if ( ( length(dynamic[1,] )) <= length(colores) ) {
-                        
-                        indexes <- 1:length(dynamic[1,])
-                        
-                }
-                
-                if (  length(dynamic[1,]) > length(colores)  ) {
-                        
-                        print("Number of nodes exceeds the maximum number of printable genes. Just the first 13 will be plotted.")
-                        
-                        indexes <- 1:length(colores)
-                        
-                }
-                
-        }
-        
-
-        if ( correctIndexes ) {
-                
-                if ( length(colores) < length(indexes) ) {
-                        
-                        indexes <- indexes[1:length(colores)]
-                        
-                        print("Non default given indexes are more than the maximum number of printable genes.\nOnly the first 26 will be plotted")
-                        
-                }
-        }
-        
-        etiquetas <- colnames(dynamic)
-        lineType<-rep(1,length(indexes))
-        timePeriod <- times[length(times)]
-        
-        plot(times,dynamic[,indexes[1]],col=colores[1],
-             xlim = c(0,timePeriod+1),ylim = c(0,1),
-             xlab = "Time",ylab = "Node Level of activation",
-             type = "l",lwd=2.5,frame.plot = FALSE)
-        
-        for (i in 2:( length(indexes) ) ){
-                
-                color <- colores[i]
-                        
-                lines(times,dynamic[,indexes[i]],
-                              col=color,type = "l",lwd=2.5)
-
-        }
-        
-        legend(timePeriod+0.5,1,cex = 0.8,legend=etiquetas,lwd = 2.5,
-               lty=lineType,col = colores,bty = "n")
-
-}
-
-
-##########################################################################################################################
-
-# function similar to plotSequence in boolnet. Plot the time serie of the regulatory network based on SQUAD method
-# in various formats (heatmap and time-serie)
-#plotSequence.sq<-function(net,initialState="random",indexes="default",parameters="default",
-#                          timePeriod=10,lengthInterval=0.01,format="heatmap"){
-#  if ( format == "heatmap") {
-#    heatmapSQUAD(net,initialState = initialState,indexes = indexes,parameters=parameters,
-#                 timePeriod=timePeriod,lengthInterval = lengthInterval)
-#  }
-#  if ( format == "timeserie" ) {
-#    timeSerieSQUAD(net,initialState = initialState,indexes = indexes,parameters = parameters,
-#                   timePeriod=timePeriod,lengthInterval = lengthInterval)
-#  }
-#}
 
 ##################################################################################################
 

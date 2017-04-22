@@ -2,4 +2,7 @@
 
 export(asContinuous)
 export(getAttractors.sq)
+export(heatmap.sq)
+export(plotSequence.sq)
 export(squad)
+export(timeSerie.sq)

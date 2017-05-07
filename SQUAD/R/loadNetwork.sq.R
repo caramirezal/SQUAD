@@ -76,7 +76,6 @@ getRegulators.sq <- function(net.df) {
 
 ## defines a function input for ode solver importing w parameters of SQUAD format
 loadNetworkSQUAD <- function(file,fixed="default"){
-        #net <- read.csv(file,header = T,colClasses = "character",sep = ";")
         
         firstLine <- readLines(file,1)
         
@@ -98,27 +97,50 @@ loadNetworkSQUAD <- function(file,fixed="default"){
         squadODEs <- wToSQUAD(net$targets,net$factors,fixed = fixed)
         
         if (length(fixed)==1){
+                
                 if (fixed=="default"){
+                        
                         fixedGenesVal <- rep(-1, length(net$targets))
+                        
                         names(fixedGenesVal)<-net$targets
                 }
+                
         } else {
+                
                 if ( ! (length(fixed)<=length(net$factors)) ) {
+                        
                         stop("Error: More fixed genes than the actual gene nodes number!")
                 }
+                
                 fixedGenesVal <- rep(-1, length(net$targets))
+                
                 names(fixedGenesVal) <- net$targets
+                
                 for (i in names(fixed)) {
+                        
                         fixedGenesVal[i] <- fixed[[i]] 
                 }
+                
         }
         
-        regulators <- getRegulators.sq(net.df = net)
+        interactions <- list()
         
-        ## falta quitar regulators y agregar net object
+        for (i in 1:length(net$targets)) {
+                
+                interactions[[i]] <- list()
+                
+                interactions[[i]]$"input" <- getInputs(net$targets,net$factors[i])
+                
+                interactions[[i]]$"func" <- vectRepresentation(net$targets,interactions[[i]]$"input",net$factors[i])
+                
+                interactions[[i]]$"expression" <- net$factors[i]
+                
+        }
+        
+        names(interactions) <- net$targets
         
         net.sq <- list("genes"=net$targets,"fun"=squadODEs,
-             "fixed"=fixedGenesVal,"regulators"=regulators)
+             "fixed"=fixedGenesVal,"interactions"=interactions)
         
         class(net.sq) <- "SQUAD"
         
@@ -127,3 +149,98 @@ loadNetworkSQUAD <- function(file,fixed="default"){
 
 
 #net <- loadNetworkSQUAD(file = "cartoonNetworkSQUAD.R")
+
+#################################################################################################################
+
+## getInputs() obtains the indexes of input regulators already present in a boolean expression string
+## The definition of nodeRegExp can be better understood taking into account the next expression
+## grep("^a[[:punct:]| ]|[[:punct:]| ]a[[:punct:]| ]|[ |[:punct:]]a$",c("aa ","aaa"," aa ","&a&", " a "))
+## which finds the name of a node in a boolean expression.
+getInputs <- function(nodeNames,boolExpression){
+        
+        if ( class(nodeNames) != "character") {
+                
+                stop("net most be an object of class BoolNet or SQUAD")
+                
+        }
+
+        if ( class(boolExpression) != "character" ) {
+                
+                stop("boolExpresson argument most be a string")
+        }
+        
+        res <- c()
+        
+        for (i in 1:length(nodeNames)) {
+                
+                nodeRegExp <- paste("^",nodeNames[i],"[[:punct:]| ]|[[:punct:]| ]",
+                                nodeNames[i],"[[:punct:]| ]|[ |[:punct:]]",nodeNames[i],"$",sep="")
+                
+                
+                NodeFound <- grep(nodeRegExp,boolExpression)
+                
+                if ( 0 < length(NodeFound) ) {
+                        
+                        res <- c(res,i)
+                        
+                }
+                
+        }
+
+        res
+        
+}
+
+
+#getInputs(cellcycle,cellcycle$interactions$CycB$expression)
+
+## vectRepresentation() transforms a boolean function in String representation to a binary 
+## vector representation
+## Takes three arguments. The argument nodeNames is the character vector of node names of the network
+## inputs is a numeric or integer vector with the indexes of the regulators of a node with that function
+## boolExpression is the boolean function of a node in String format.
+vectRepresentation <- function(nodeNames,inputs,boolExpression) {
+        
+        if ( class(nodeNames) != "character" ) {
+                
+                stop("nodeNames argument most be a character vector")
+                
+        }
+        
+        if ( ! ( class(inputs) %in% c("numeric","integer") ) ) {
+                
+                stop("inputs argument most be a numeric vector")
+                
+        }
+        
+        if ( class(boolExpression) != "character" ) {
+                
+                stop("boolExpression argument most be a String Boolean function")
+                
+        }
+        
+        res <- numeric(2**length(inputs))
+        
+        for ( i in 1:length(res) ) {
+                
+                state <- decimalToBinary(i-1,length(inputs))
+                
+                for (j in 1:length(inputs)) {
+                        
+                        assign(nodeNames[inputs[j]],state[j])
+                        
+                }
+                
+                res[i] <- eval(parse(text = boolExpression))
+                
+        }
+        
+        res
+        
+}
+
+
+
+        
+
+

@@ -105,23 +105,22 @@ loadNetworkSQUAD <- function(file,fixed="default"){
                         names(fixedGenesVal)<-net$targets
                 }
                 
-        } else {
+        } 
                 
-                if ( ! (length(fixed)<=length(net$factors)) ) {
-                        
-                        stop("Error: More fixed genes than the actual gene nodes number!")
-                }
+        if ( ! (length(fixed)<=length(net$factors)) ) {
                 
-                fixedGenesVal <- rep(-1, length(net$targets))
-                
-                names(fixedGenesVal) <- net$targets
-                
-                for (i in names(fixed)) {
-                        
-                        fixedGenesVal[i] <- fixed[[i]] 
-                }
-                
+                stop("Error: More fixed genes than the actual gene nodes number!")
         }
+        
+        fixedGenesVal <- rep(-1, length(net$targets))
+        
+        names(fixedGenesVal) <- net$targets
+        
+        for (i in names(fixed)) {
+                
+                fixedGenesVal[i] <- fixed[i] 
+        }
+                
         
         interactions <- list()
         

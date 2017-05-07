@@ -121,7 +121,6 @@ loadNetworkSQUAD <- function(file,fixed="default"){
                 fixedGenesVal[i] <- fixed[i] 
         }
                 
-        
         interactions <- list()
         
         for (i in 1:length(net$targets)) {
@@ -222,11 +221,14 @@ vectRepresentation <- function(nodeNames,inputs,boolExpression) {
         
         for ( i in 1:length(res) ) {
                 
+                ## decimalToBinary most be used carefully since the values are returned in reverse order
                 state <- decimalToBinary(i-1,length(inputs))
                 
-                for (j in 1:length(inputs)) {
+                k <- length(inputs)
+                
+                for (j in 1:k) {
                         
-                        assign(nodeNames[inputs[j]],state[j])
+                        assign(nodeNames[inputs[j]],state[k-j+1])
                         
                 }
                 

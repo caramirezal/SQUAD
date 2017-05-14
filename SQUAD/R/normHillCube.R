@@ -39,7 +39,7 @@ boolCubeFunTest <- function(binVector){
 
 #################################################################################################################################
 
-asBoolCube <- function(net,gamma=1){
+asNormHillCube <- function(net,gamma=1){
         if ( class(net) != "BooleanNetwork" ) {
                 stop("net most be an object of class BooleanNetwork")
         }

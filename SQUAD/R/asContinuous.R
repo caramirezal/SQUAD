@@ -30,39 +30,84 @@
 #' @name asContinuous
 #' @title asContinuous
 
-asContinuous <- function(net) {
-        if ( class(net) != "BooleanNetwork") {
-                stop("A net object of class BooleanNetwork most be provided!")
-        } 
-        network <- function(times,state,parameters) {
-                with(as.list(c(state,parameters)),{
-                        newState.vect<-rep(0,length(net$genes))
-                        # Definition of parameters h, w and gamma.
+asContinuous <- function(net,to="squad",parameters="default") {
+        if ( ! ( class(net) %in% c("BooleanNetwork","squad","normHillCubes" ) ) ) {
+                stop("A net object of the class 'BooleanNetwork' or 'squad' or 'normHillCubes' most be provided!")
+        }
+        if ( ! ( class(parameters) %in% c("list","character") ) ) {
+                stop("The 'parameters' argument most be a list or a default character.")
+        }
+        if ( ! ( to %in% c("squad","normHillCubes") ) ) {
+                stop("The 'to' argument most be to 'squad' or 'normHillCubes'.")
+        }
+        
+        if ( class(net) == "BooleanNetwork") {
+                # BoolNet to squad format
+                if ( to == "squad") {
+                        
+                        if ( ! ( length(parameters) %in% c(1,2) ) ) {
+                                stop("The 'parameters' argument most contain two numerical vectors or be set to 'default'. ")
+                        }
+                        network <- function(times,state,parameters) {
+                                with(as.list(c(state,parameters)),{
+                                        newState.vect<-rep(0,length(net$genes))
+                                        ## Definition of parameters h, w and gamma.
+                                        if (length(parameters)==1) { 
+                                                if (parameters=="default") {
+                                                        gamma <- rep(1,length(net$genes))
+                                                        h <- rep(50,length(net$genes))
+                                                }
+                                        }
+                                        if ( length(parameters) > 1 ) {
+                                                h<-parameters[[1]]
+                                                gamma<-parameters[[2]]
+                                        }
+                                        w <- extractw(net,state)
+                                        names(w) <- net$genes
+                                        # applying SQUAD
+                                        for (i in 1:length(net$genes)){
+                                                newState.vect[i]<-SQUAD(x=state[i],w=w[i],gamma = gamma[i],h=h[i])
+                                        }
+                                        names(newState.vect)<-net$genes
+                                        return(list(newState.vect))
+                                })
+                        }
+                        
+                        res <- list("genes" = net$genes, "interactions"=net$interactions,"fun"=network,
+                                    "fixed" = net$fixed)
+                        
+                        class(res) <- "squad"
+                }
+                
+                # BoolNet to normHillCube
+                if ( to == "normHillCubes" ) {
+                        
+                        if ( ! ( length(parameters) %in% c(1,3) ) ) {
+                                stop("The 'parameters' argument most contain three numerical vectors or be set to 'default'. ")
+                        }
+                        ## Setting parameters
                         if (length(parameters)==1) { 
                                 if (parameters=="default") {
                                         gamma <- rep(1,length(net$genes))
-                                        h <- rep(50,length(net$genes))
                                 }
                         }
                         if ( length(parameters) > 1 ) {
-                                h<-parameters[[1]]
-                                gamma<-parameters[[2]]
+                                n <- parameters[[1]]
+                                k <- parameters[[2]]
+                                gamma <- parameters[[3]]
                         }
-                        w <- extractw(net,state)
-                        names(w) <- net$genes
-                        # applying SQUAD
-                        for (i in 1:length(net$genes)){
-                                newState.vect[i]<-SQUAD(x=state[i],w=w[i],gamma = gamma[i],h=h[i])
-                        }
-                        names(newState.vect)<-net$genes
-                        return(list(newState.vect))
-                })
+                        
+                        network <- asNormHillCube(net,n=n,k=k,gamma = gamma)
+                        
+                        res <- list("genes" = net$genes, "interactions" = net$interactions ,"fun"=network, 
+                                    "fixed" = net$fixed)
+                        
+                        class(res) <- "normHillCubes"
+                        
+                }
+                
         }
-        
-        res <- list("genes" = net$genes, "fun"=network,
-                    "fixed" = net$fixed)
-        
-        class(res) <- "SQUAD"
+
         
         res
 }

@@ -41,8 +41,8 @@ squad <- function(net, initialState="random",
                   parameters="default", timePeriod=7.5, 
                   lengthInterval=0.01, ...) {
         
-        if ( (class(net) != "BooleanNetwork") && (class(net) != "SQUAD") ) {
-                stop('A net object of class "BooleanNetwork" or "SQUAD" most be provided!')
+        if ( ! ( class(net) %in% c("BooleanNetwork","squad","normHillCubes") ) ) {
+                stop('A net object of class "BooleanNetwork" or "squad" most be provided!')
         }
         
         times <- seq(0,timePeriod,by = lengthInterval)
@@ -55,33 +55,37 @@ squad <- function(net, initialState="random",
                 }
         }
         
-        if (length(parameters)==1) { 
+        #if (length(parameters)==1) { 
                 
-                if (parameters=="default") {
+        #        if (parameters=="default") {
                         
-                        gamma <- rep(1,length(net$genes))
-                        h <- rep(50,length(net$genes))
-                        parameters<-list(h,gamma)
+        #                gamma <- rep(1,length(net$genes))
+        #                h <- rep(50,length(net$genes))
+        #                parameters<-list(h,gamma)
+        #        }
+                
+        #}
+        
+        ## BoolNet formats
+        if ( class(net) %in% c("BooleanNetwork","squad") ) {
+                if ( class(net) == "BooleanNetwork" ) {
+                        net.sq <- asContinuous(net,parameters = parameters)
+                        dynamic<-ode(y=initialState,times=times,func=net.sq$fun,
+                                     parms = parameters,atol=10e-6, rtol=10e-6,...)
                 }
-                
+                if ( class(net) == "squad" ) {
+                        dynamic<-ode(y=initialState,times=times,func=net$fun,
+                                     parms = parameters,atol=10e-6, rtol=10e-6,...)
+                }
         }
-        
-        # Usar ...
-        # agregar opciones BooleanNetwork y SQUAD
-        if (class(net) == "BooleanNetwork") {
-                
-                net.sq <- asContinuous(net)
-                dynamic<-ode(y=initialState,times=times,func=net.sq$fun,
-                             parms = parameters,atol=10e-6, rtol=10e-6,...)
-        }
-        
-        if (class(net) == "SQUAD") {
-                
+
+        if ( class(net) == "normHillCubes" ) {
                 dynamic<-ode(y=initialState,times=times,func=net$fun,
                              parms = parameters,atol=10e-6, rtol=10e-6,...)
+                
         }
         
-
+        
         colnames(dynamic) <- c("time",net$genes)
         dynamic
 }

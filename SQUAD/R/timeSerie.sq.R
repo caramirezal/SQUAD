@@ -66,9 +66,9 @@ timeSerie.sq <- function(dynamic,indexes="default") {
         timePeriod <- times[length(times)]
         
         plot(times,dynamic[,indexes[1]],col=colores[1],
-             xlim = c(0,timePeriod+1),ylim = c(0,1),
+             ylim = c(0,1),
              xlab = "Time",ylab = "Node Level of activation",
-             type = "l",lwd=2.5,frame.plot = FALSE)
+             type = "l",lwd=2.5,frame.plot = TRUE)
         
         for (i in 2:( length(indexes) ) ){
                 
@@ -79,7 +79,7 @@ timeSerie.sq <- function(dynamic,indexes="default") {
                 
         }
         
-        legend(timePeriod+0.5,1,cex = 0.8,legend=etiquetas[indexes],lwd = 2.5,
+        legend(timePeriod+log(timePeriod),1,cex = 0.8,legend=etiquetas[indexes],lwd = 2.5,
                lty=lineType,col = colores[1:length(indexes)],bty = "n")
         
 }

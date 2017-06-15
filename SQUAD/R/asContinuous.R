@@ -88,6 +88,8 @@ asContinuous <- function(net,to="squad",parameters="default") {
                         ## Setting parameters
                         if (length(parameters)==1) { 
                                 if (parameters=="default") {
+                                        n <- rep(50,length(net$genes))
+                                        k <- rep(0.5,length(net$genes))
                                         gamma <- rep(1,length(net$genes))
                                 }
                         }

@@ -1,3 +1,22 @@
+#' asnormHillCube transform a boolean regulatory network to hill cube continuous interpolation.
+#' 
+#' @description transform a boolean regulatory network to hill cube continuous interpolation.
+#' It return a regulatory network model.   
+#' @param net a regulatory network model that belongs to "booleanNetwork" or "squad" class.
+#' @param n coefficient determines the level of the slope of the curve. A vector of 
+#' length k. Where k is the number of nodes of the network.
+#' @param k coefficient determines the threshold which resembles boolean switch behavior.
+#' A vector of length k. Where k is the number of nodes of the network.
+#' @param gamma determines the dacay rate of the molecule. A vector of length k. Where k 
+#' is the number of nodes of the network.
+#' @examples
+#' library(BoolNet)
+#' data(cellcycle)
+#' cellcycle.ci <- asContinuous(cellcycle,to="normHillCubes")
+#' initialState <- rep(0,length(cellcycle$genes))
+#' sim <- squad(cellcycle.ci,initialState = initialState)
+#' head(sim)
+#' 
 
 boolCubeFun <- function(boolInput,Input) {
         if ( length(boolInput) != 2**(length(Input)) ) {
@@ -67,7 +86,7 @@ asNormHillCube <- function(net,n,k,gamma){
 
 hillFun <- function(x,k=0.5,n=50) { (x**n) / ( x**n + k**n ) }
     
-hillFunNorm <- function(x,k=0.5,n=50) { hillFun(x,k,n) / hillFun(1) }
+hillFunNorm <- function(x,k=0.5,n=50) { hillFun(x,k,n) / hillFun(1,k,n) }
         
 #x <- seq(0,1,length.out = 100)    
 #plot(x,hillFunNorm(x,n=50,k=0.5),type = "l",col="green")

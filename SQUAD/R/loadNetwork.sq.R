@@ -1,21 +1,23 @@
-## March 28, 2017
-## Mexico City
-## Written by Carlos
+#' load a regulatory network model in squad format
+#' 
+#' @description Load a regulatory network model in squad format. It returns a squad object that 
+#' can be used to perform continuous simulations using interpolations of Boolean Regulatory
+#' network models
+#' @name loadNetwork.sq
+#' @export loadNetwork.sq
+#' @param fixed a vector of values in the range [0,1] to node values to be fixed. 
+#' 
+#' @examples
+#' net.sq <- loadNetwork.sq("cartoonNetworkSQUAD.txt")
+#' sim <- squad(net.sq)
+#' timeSerie.sq(sim)
 
-#library(deSolve)
 
-
-
-
-####################################################################################################
-
-# squad generic function
+## squad generic function
 SQUAD<-function(x,w,gamma,h){
         val <- ((-exp(0.5*h) + exp(-h*(w-0.5))) / ((1-exp(0.5*h)) * (1+exp(-h*(w-0.5))))) - (gamma*x)
         return(val)
 }
-
-###################################################################################################
 
 
 ## parse w equations into a deSolve function
@@ -55,7 +57,6 @@ wToSQUAD <- function(genes,wExpressions,fixed="default"){
 
 }
 
-#####################################################################################################
 
 ## get the regulators of the nodes by checking if the names of the nodes
 ## are in the string of the corresponding ODE continuous function
@@ -72,10 +73,9 @@ getRegulators.sq <- function(net.df) {
 }
 
 
-######################################################################################################################################
 
 ## defines a function input for ode solver importing w parameters of SQUAD format
-loadNetworkSQUAD <- function(file,fixed="default"){
+loadNetwork.sq <- function(file,fixed="default"){
         
         firstLine <- readLines(file,1)
         
@@ -88,7 +88,7 @@ loadNetworkSQUAD <- function(file,fixed="default"){
         
         leftSideEq <- sub(",.*","",fileLines)
         
-        rigthSideEq <- sub(".*,","",fileLines)
+        rigthSideEq <- sub("*.,","",fileLines)
         
         ## construct a df called net
         net <- list("targets"=leftSideEq[2:length(leftSideEq)],
@@ -140,15 +140,12 @@ loadNetworkSQUAD <- function(file,fixed="default"){
         net.sq <- list("genes"=net$targets,"fun"=squadODEs,
              "fixed"=fixedGenesVal,"interactions"=interactions)
         
-        class(net.sq) <- "SQUAD"
+        class(net.sq) <- "squad"
         
         net.sq
 }
 
 
-#net <- loadNetworkSQUAD(file = "cartoonNetworkSQUAD.R")
-
-#################################################################################################################
 
 ## getInputs() obtains the indexes of input regulators already present in a boolean expression string
 ## The definition of nodeRegExp can be better understood taking into account the next expression
@@ -189,8 +186,6 @@ getInputs <- function(nodeNames,boolExpression){
         
 }
 
-
-#getInputs(cellcycle,cellcycle$interactions$CycB$expression)
 
 ## vectRepresentation() transforms a boolean function in String representation to a binary 
 ## vector representation
@@ -239,9 +234,4 @@ vectRepresentation <- function(nodeNames,inputs,boolExpression) {
         res
         
 }
-
-
-
-        
-
 

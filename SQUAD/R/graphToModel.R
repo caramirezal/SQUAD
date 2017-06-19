@@ -1,30 +1,66 @@
-# Writen by Carlos Ramirez
-# January 30, 2017
-#  Mexico City
+#' convert a matrix of conectivity to a Boolean regulatory network in BoolNet format.
+#' @description  graphToModel() convert a matrix of conectivity to a Boolean regulatory network in BoolNet format.
+#' @name graphToModel
+#' @details Algorithm:
+#' Let A be the matrix of conectivity where {a_ij} = 1 (-1) iff the node i is positive (negative) regulator
+#' and 0 if there is no interaction.
+#' let positives (negatives) be the boolean input of the positive (negative) regulators. 
+#' define b = min ( max(positives), 1 - max(negatives)  )
+#' That is, it is assumed that the node j is going to be active iff at leat one of the positive regulators
+#' is active and none of the negative regulators are active. 
+#' let k be the number of regulators and f be the boolean function for the node i to be defined. 
+#' f is a vector of boolean values of length 2**k that maps 
+#' every boolean vector input of length k (ordered according to node indexes) to a boolean value.
+#' 1. Define an object of the class net BoolNet format.
+#' 2. Traverse the column of A[,j] and extract positive and negative regulators.
+#' 3. Define f[i] as b[x[i]] where x is the boolean vector representation of decimal number i from 1 to
+#'       2**k.
+#' 4. Add the node and its function to the net object.
+#' 5. Repeat for every column in A.
+#' @usage graphToModel(connectivityMatrix)
+#' @export graphToModel
+#' @return an object of class squad which represents a continuous interpolation of boolean network
+#' models
+#' @examples
+#' ## random conectivity matrix of ten rows (=columns)
+#' net <- randomMatrix(10)
+#' graphToModel(net)
 
-# graphToModel() convert a matrix of conectivity to a Boolean regulatory network in BoolNet format.
-# Algorithm:
-# Let A be the matrix of conectivity where {a_ij} = 1 (-1) iff the node i is positive (negative) regulator
-# and 0 if there is no interaction.
-# let positives (negatives) be the boolean input of the positive (negative) regulators. 
-# define b = min ( max(positives), 1 - max(negatives)  )
-# That is, it is assumed that the node j is going to be active iff at leat one of the positive regulators
-# is active and none of the negative regulators are active. 
-# let k be the number of regulators and f be the boolean function for the node i to be defined. 
-# f is a vector of boolean values of length 2**k that maps 
-# every boolean vector input of length k (ordered according to node indexes) to a boolean value.
-# 1. Define an object of the class net BoolNet format.
-# 2. Traverse the column of A[,j] and extract positive and negative regulators.
-# 3. Define f[i] as b[x[i]] where x is the boolean vector representation of decimal number i from 1 to
-#       2**k.
-# 4. Add the node and its function to the net object.
-# 5. Repeat for every column in A.
 
-#########################################################################################################################
-# Define a function that extract regulators of the node i
-# return a list of the vectors of positives and negative regulators.
-# Let A be the matrix of conectivity where {a_ij} = 1 (-1) iff the node i is positive (negative) regulator
-# and 0 if there is no interaction.
+# Transform a static representation of a regulatory network
+# to a dynamic Boolean discrete model
+graphToModel<-function(conectivityMatrix){
+        # define the net list object 
+        interactions<-list()
+        genes<-list()
+        fixed<-list()
+        network<-list(interactions,genes,fixed)
+        class(network)<-"BooleanNetwork"
+        nameList<-c("interactions","genes","fixed")
+        names(network)<-nameList
+        for (i in 1:length(conectivityMatrix[1,])){
+                reg<-getRegulators(conectivityMatrix,i)
+                input<-c(reg[[1]],reg[[2]])
+                vector<-rep(0,length(input))
+                for (j in 1:length(input)){
+                        vector[j]<-input[j]
+                }
+                fun<-getBooleanFunction(conectivityMatrix,i)
+                expression<-" min( max(positive), 1 - max(negative) ) "
+                network$interactions[[i]]<-pairlist(sort(vector),fun,expression)
+                names(network$interactions[[i]])<-c("input","fun","expression")
+        }
+        names(network$interactions)<-rownames(conectivityMatrix)
+        #network$genes[[1]]<-colnames(netMatrix)
+        network[[2]]<-colnames(conectivityMatrix)
+        fixed<-rep(-1,length(conectivityMatrix[1,]) )
+        names(fixed)<-rownames(conectivityMatrix)
+        network[[3]]<-fixed
+        return(network)
+}
+
+
+
 
 # Algorithm: traverse the i-th column of A and extract regulators
 # return a list with two vectors of positive and negative regulators (in order)
@@ -147,35 +183,5 @@ getBooleanFunction<-function(matrix,nodeIndex){
 
 ##########################################################################################################################
 
-# Transform a static representation of a regulatory network
-# to a dynamic Boolean discrete model
-graphToModel<-function(conectivityMatrix){
-  # define the net list object 
-  interactions<-list()
-  genes<-list()
-  fixed<-list()
-  network<-list(interactions,genes,fixed)
-  class(network)<-"BooleanNetwork"
-  nameList<-c("interactions","genes","fixed")
-  names(network)<-nameList
-  for (i in 1:length(conectivityMatrix[1,])){
-    reg<-getRegulators(conectivityMatrix,i)
-    input<-c(reg[[1]],reg[[2]])
-    vector<-rep(0,length(input))
-    for (j in 1:length(input)){
-      vector[j]<-input[j]
-    }
-    fun<-getBooleanFunction(conectivityMatrix,i)
-    expression<-" min( max(positive), 1 - max(negative) ) "
-    network$interactions[[i]]<-pairlist(sort(vector),fun,expression)
-    names(network$interactions[[i]])<-c("input","fun","expression")
-  }
-  names(network$interactions)<-rownames(conectivityMatrix)
-  #network$genes[[1]]<-colnames(netMatrix)
-  network[[2]]<-colnames(conectivityMatrix)
-  fixed<-rep(-1,length(conectivityMatrix[1,]) )
-  names(fixed)<-rownames(conectivityMatrix)
-  network[[3]]<-fixed
-  return(network)
-}
+
 

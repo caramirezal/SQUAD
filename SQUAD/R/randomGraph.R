@@ -1,12 +1,41 @@
+#' create a random conectivity matrix that can be used to test graphToModel() function
 #' @description randomGraph() create a random conectivity matrix that can be used to test graphToModel() function
 #' @export randomMatrix 
 #' @param matrixDimension the number of rows (=columns) in the square matrix of connectivity
 #' @param lamda a numeric positive value which represent the lamda parameter of the exponential distribution
 #' for the number of outputs of each node.
 #' @usage randomMatrix(numeric,integer)
-#' example
+#' @examples
 #' randomMatrix(100,3)
 #' str(randomMatrix)
+
+
+# Generates conectivity matrices that has poisson distribution for 
+# inputs and exponential distribution for outputs.
+randomMatrix<-function(matrixDimension=20,lamda=3){
+        A<-matrix(0,matrixDimension,matrixDimension)
+        nodeNames<-paste("node",1:matrixDimension,sep="")
+        for (i in 1:length(A[,1]) ){
+                x<-runif(1,min = 0,max = 1)
+                e<-exponentialFunction(x,lamda = lamda)
+                n<-floor(e)
+                regulators<-sample(1:matrixDimension,n)
+                for (j in regulators ){
+                        A[i,j]<-sample(c(-1,1),1)
+                }
+        }
+        for (k in 1:matrixDimension){
+                x<-rpois(1,lambda = 0.1)
+                n<-1+x
+                regulators<-sample(1:matrixDimension,n)
+                for (r in regulators){
+                        A[r,k]<-sample(c(-1,1),1)
+                }
+        }
+        rownames(A)<-nodeNames
+        colnames(A)<-nodeNames
+        return(A)
+}
 
 
 # exponential functions for outputs
@@ -19,32 +48,6 @@ poissonFunction<-function(k,lamda=2){
   return( ( exp(-lamda)*( lamda**k ) ) / factorial(k) )
 }
 
-# Generates conectivity matrices that has poisson distribution for 
-# inputs and exponential distribution for outputs.
-randomMatrix<-function(matrixDimension=20,lamda=3){
-  A<-matrix(0,matrixDimension,matrixDimension)
-  nodeNames<-paste("node",1:matrixDimension,sep="")
-  for (i in 1:length(A[,1]) ){
-    x<-runif(1,min = 0,max = 1)
-    e<-exponentialFunction(x,lamda = lamda)
-    n<-floor(e)
-    regulators<-sample(1:matrixDimension,n)
-    for (j in regulators ){
-      A[i,j]<-sample(c(-1,1),1)
-    }
-  }
-  for (k in 1:matrixDimension){
-    x<-rpois(1,lambda = 0.1)
-    n<-1+x
-    regulators<-sample(1:matrixDimension,n)
-    for (r in regulators){
-      A[r,k]<-sample(c(-1,1),1)
-    }
-  }
-  rownames(A)<-nodeNames
-  colnames(A)<-nodeNames
-  return(A)
-}
 
 
 

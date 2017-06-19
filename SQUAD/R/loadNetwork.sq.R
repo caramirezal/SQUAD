@@ -134,14 +134,17 @@ loadNetwork.sq <- function(file,fixed="default"){
                 interactions[[i]]$"expression" <- net$factors[i]
                 
         }
-        
         names(interactions) <- net$targets
-        
-        net.sq <- list("genes"=net$targets,"fun"=squadODEs,
+        net.sq <- list("genes"=net$targets,"squad"=squadODEs,
              "fixed"=fixedGenesVal,"interactions"=interactions)
         
-        class(net.sq) <- "squad"
+        ## getting normalized Hill Cubes continuous interpolations
+        net.boolNet <-  with(net.sq, list(genes,interactions,fixed))
+        class(net.boolNet) <- "BooleanNetwork"
+        net.continuous <- asContinuous(net.boolNet)
+        net.sq$"normHillCubes" <- net.continuous$"normHillCubes"
         
+        class(net.sq) <- "squad"
         net.sq
 }
 

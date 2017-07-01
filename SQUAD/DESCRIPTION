@@ -3,8 +3,8 @@ Title: Standard Qualitative for Analysis of Dynamics
 Version: 1.0.0
 Author: Carlos Ramirez
 Description: Definition and simulation of continuous regulatory network models
-Depends: rJava (>= 0.5-0), BoolNet (>= 2.1.2), deSolve (>= 1.14), reshape (>= 0.8.6)
-SystemRequirements: Java (>= 1.6)
+Depends: rJava (>= 0.9-8), BoolNet (>= 2.1.2), deSolve (>= 1.14), reshape (>= 0.8.6)
+SystemRequirements: Java (>= 1.8)
 License: GNU General Public License v3.0
 Encoding: UTF-8
 LazyData: true

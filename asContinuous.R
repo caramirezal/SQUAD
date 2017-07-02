@@ -2,7 +2,7 @@
 # January 30, 2017
 # Mexico City
 
-# asContinuous() transform a boolean regulatory network model in BooleanNet format to 
+# asContinuous() transforms a boolean regulatory network model in BooleanNet format to 
 # a continuous model object that can be supplied to ode() function from deSolve R package
 # Algorithm:
 # extract w vector of parameters w_i through the application of fuzzy logic functions

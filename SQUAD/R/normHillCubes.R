@@ -62,9 +62,9 @@ asNormHillCube <- function(net,n,k,gamma,fixed="default"){
         if ( ! ( class(net) %in% c("BooleanNetwork","squad") ) ) {
                 stop("net most be an object of class BooleanNetwork")
         }
-        if ( class(net) == "BooleanNetwork") {
-                network <- function(times,state,parameters) {
-                        with(as.list(c(state,parameters)),{
+        #if ( class(net) == "BooleanNetwork") {
+                network <- function(times,state,parameters,fixed) {
+                        with(as.list(c(state,parameters,fixed)),{
                                 newState <- rep(0,length(net$genes))
                                 for (i in 1:length(net$genes)) {
                                         regulators <- net$interactions[[i]]$input
@@ -74,13 +74,22 @@ asNormHillCube <- function(net,n,k,gamma,fixed="default"){
                                 names(newState) <- net$genes
 
                                 ## definition of mutants
-
+                                if ( length(fixed) == 1 ) {
+                                        if ( fixed != "default" ) {
+                                                fixedGene <- names(fixed)
+                                                newState[fixedGene] <- 0
+                                        }
+                                }
+                                if ( 1 < length(fixed) ) {
+                                        fixedGenes <- names(fixed)
+                                        newState[fixedGenes] <- 0
+                                }
 
                                 return(list(newState))
                         })
                 }
 
-        }
+        #}
 
         network
 }

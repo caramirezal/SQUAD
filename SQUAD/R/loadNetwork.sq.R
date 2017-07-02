@@ -25,8 +25,8 @@ wToSQUAD <- function(genes,wExpressions,fixed="default"){
 
         ## define checkpoints in this part for genes, wExpression
         ## and fixed
-       squadODEs <- function(times,state,parameters){
-                with(as.list(c(state,parameters)), {
+       squadODEs <- function(times,state,parameters,fixed){
+                with(as.list(c(state,parameters,fixed)), {
                         for (i in 1:length(genes)) {
                                 assign(genes[i],state[i])
                         }
@@ -110,9 +110,7 @@ loadNetwork.sq <- function(file,fixed="default"){
         }
 
         fixedGenesVal <- rep(-1, length(net$targets))
-
         names(fixedGenesVal) <- net$targets
-
         for (i in names(fixed)) {
                 fixedGenesVal[i] <- fixed[i]
         }
@@ -141,7 +139,8 @@ loadNetwork.sq <- function(file,fixed="default"){
         class(net.boolNet) <- "BooleanNetwork"
 
         ## getting normalized Hill Cubes continuous interpolations
-        net.continuous <- asContinuous(net.boolNet)
+        net.continuous <- asContinuous(net.boolNet,
+                                       fixed = fixed)
         net.sq$"normHillCubes" <- net.continuous$normHillCubes
 
         class(net.sq) <- "squad"

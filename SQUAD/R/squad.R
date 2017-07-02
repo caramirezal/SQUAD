@@ -77,18 +77,19 @@ squad <- function(net, initialState="random",
         }
         if ( length(fixed) > 1 ) {
                 fixedGenes <- names(fixed)
-                for (i in fixedGenes) {
-                        initialState[i] <- fixed[i]
-                }
+                initialState[fixedGenes] <- fixed[fixedGenes]
         }
 
         if ( class(net) == "BooleanNetwork" ) {
-                net.sq <- asContinuous(net,parameters = parameters)
+                net.sq <- asContinuous(net,
+                                       parameters = parameters,
+                                       fixed = fixed)
                 if ( type == "squad" ) {
                         dynamic<-ode(y=initialState,
                                      times=times,
                                      func=net.sq$squad,
                                      parms = parameters,
+                                     fixed = fixed,
                                      atol=10e-6,
                                      rtol=10e-6,...)
                 }
@@ -96,6 +97,7 @@ squad <- function(net, initialState="random",
                         dynamic<-ode(y=initialState,
                                      times=times,
                                      func=net.sq$normHillCubes,
+                                     fixed = fixed,
                                      parms = parameters,
                                      atol=10e-6,
                                      rtol=10e-6,...)
@@ -107,15 +109,22 @@ squad <- function(net, initialState="random",
                                      times=times,
                                      func=net$squad,
                                      parms = parameters,
+                                     fixed = fixed,
                                      atol=10e-6,
                                      rtol=10e-6,
                                      ...)
                 }
                 if ( type == "normHillCubes" ) {
+                        net.sq <- net[c("interactions","genes","fixed")]
+                        class(net.sq) <- "BooleanNetwork"
+                        net.sq <- asContinuous(net.sq,
+                                               parameters = parameters,
+                                               fixed = fixed)
                         dynamic<-ode(y=initialState,
                                      times=times,
-                                     func=net$normHillCubes,
+                                     func=net.sq$normHillCubes,
                                      parms = parameters,
+                                     fixed = fixed,
                                      atol=10e-6,
                                      rtol=10e-6,...)
                 }

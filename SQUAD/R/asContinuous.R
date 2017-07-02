@@ -45,8 +45,8 @@ asContinuous <- function(net,parameters="default",fixed="default") {
                 if ( ! ( length(parameters) %in% c(1,2) ) ) {
                         stop("The 'parameters' argument most contain two numerical vectors or be set to 'default'. ")
                 }
-                network <- function(times,state,parameters) {
-                        with(as.list(c(state,parameters)),{
+                network <- function(times,state,parameters,fixed) {
+                        with(as.list(c(state,parameters,fixed)),{
                                 newState.vect<-rep(0,length(net$genes))
                                 ## Definition of parameters h, w and gamma.
                                 if (length(parameters)==1) {

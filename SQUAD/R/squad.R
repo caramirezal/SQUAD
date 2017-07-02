@@ -72,7 +72,7 @@ squad <- function(net, initialState="random",
                 if ( fixed != "default" ) {
                         fixedGene <- names(fixed)
                         initialState[fixedGene] <- fixed[fixedGene]
-                        cat(initialState)
+                        #cat(initialState)
                 }
         }
         if ( length(fixed) > 1 ) {

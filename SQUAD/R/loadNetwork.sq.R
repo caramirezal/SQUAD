@@ -43,15 +43,16 @@ wToSQUAD <- function(genes,wExpressions,fixed="default"){
 
                         ## definition of mutants
                         names(evalSQUAD) <- genes
-                        if (length(fixed)==1) {
+                        if ( length(fixed) ==1) {
                                 if (fixed != "default") {
-                                        i <- names(fixed)
-                                        evalSQUAD[i] <- 0
+                                        fixedGene <- names(fixed)
+                                        evalSQUAD[fixedGene] <- 0
                                 }
-                        } else {
-                                for (i in names(fixed)) {
-                                        evalSQUAD[i] <- 0
-                                }
+                        }
+                        if ( length(fixed) > 1 ) {
+                                fixedGenes <- names(fixed)
+                                evalSQUAD[fixedGenes] <- 0
+
                         }
 
                         return(list(evalSQUAD))
@@ -82,16 +83,13 @@ getRegulators.sq <- function(net.df) {
 loadNetwork.sq <- function(file,fixed="default"){
 
         firstLine <- readLines(file,1)
-
+        ## check format
         if ( ! ( grepl("targets",firstLine) && grepl("factors",firstLine) ) ) {
 
                 stop("Please, provide a valid BoolNet/SQUAD format")
         }
-
         fileLines <- readLines(file)
-
         leftSideEq <- sub(",.*","",fileLines)
-
         rigthSideEq <- sub("*.,","",fileLines)
 
         ## construct a df called net
@@ -101,18 +99,13 @@ loadNetwork.sq <- function(file,fixed="default"){
         squadODEs <- wToSQUAD(net$targets,net$factors,fixed = fixed)
 
         if (length(fixed)==1){
-
                 if (fixed=="default"){
-
                         fixedGenesVal <- rep(-1, length(net$targets))
-
-                        names(fixedGenesVal)<-net$targets
+                        names(fixedGenesVal) <- net$targets
                 }
-
         }
 
         if ( ! (length(fixed)<=length(net$factors)) ) {
-
                 stop("Error: More fixed genes than the actual gene nodes number!")
         }
 
@@ -121,29 +114,23 @@ loadNetwork.sq <- function(file,fixed="default"){
         names(fixedGenesVal) <- net$targets
 
         for (i in names(fixed)) {
-
                 fixedGenesVal[i] <- fixed[i]
         }
 
         interactions <- list()
-
         for (i in 1:length(net$targets)) {
-
                 input <- getInputs(net$targets,net$factors[i])
-
                 func <- vectRepresentation(net$targets,
                                            input,
                                            net$factors[i])
-
                 expression <- net$factors[i]
-
                 interactions[[i]] <- list("input"=input,
                                           "func"=func,
                                           "expression"=expression)
-
         }
         names(interactions) <- net$targets
 
+        ## definition of the squad object result
         net.sq <- list("genes"=net$targets,
                        "interactions"=interactions,
                        "fixed"=fixedGenesVal,

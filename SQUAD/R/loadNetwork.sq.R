@@ -23,6 +23,8 @@ SQUAD<-function(x,w,gamma,h){
 ## parse w equations into a deSolve function
 wToSQUAD <- function(genes,wExpressions,fixed="default"){
 
+        ## define checkpoints in this part for genes, wExpression
+        ## and fixed
        squadODEs <- function(times,state,parameters){
                 with(as.list(c(state,parameters)), {
                         for (i in 1:length(genes)) {
@@ -38,6 +40,8 @@ wToSQUAD <- function(genes,wExpressions,fixed="default"){
                                 evalSQUAD <- sapply(1:length(genes), function(i) SQUAD(x = state[i], w= w[i],
                                                                                        gamma = gamma[i], h = h[i]))
                         }
+
+                        ## definition of mutants
                         names(evalSQUAD) <- genes
                         if (length(fixed)==1) {
                                 if (fixed != "default") {
@@ -49,6 +53,7 @@ wToSQUAD <- function(genes,wExpressions,fixed="default"){
                                         evalSQUAD[i] <- 0
                                 }
                         }
+
                         return(list(evalSQUAD))
                 })
         }
@@ -62,7 +67,6 @@ wToSQUAD <- function(genes,wExpressions,fixed="default"){
 ## are in the string of the corresponding ODE continuous function
 getRegulators.sq <- function(net.df) {
         res <- c()
-
         for (i in 1:length(net.df$targets)) {
                 regulators <- net.df$factors[i]
                 #for (j in 1:length(net.df$targets)) {

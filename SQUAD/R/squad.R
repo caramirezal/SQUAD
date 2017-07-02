@@ -41,6 +41,7 @@ squad <- function(net, initialState="random",
                   parameters="default", timePeriod=7.5,
                   lengthInterval=0.01,
                   type = "squad",
+                  fixed = "default",
                   ...) {
 
         if ( ! ( class(net) %in% c("BooleanNetwork","squad") ) ) {
@@ -50,13 +51,11 @@ squad <- function(net, initialState="random",
         times <- seq(0,timePeriod,by = lengthInterval)
 
         if (length(initialState)==1) {
-
                 if (initialState=="random"){
-
                         initialState<-runif(length(net$genes),min=0,max = 1)
                 }
         }
-
+        names(initialState) <- net$genes
         #if (length(parameters)==1) {
 
         #        if (parameters=="default") {
@@ -67,6 +66,21 @@ squad <- function(net, initialState="random",
         #        }
 
         #}
+
+        ## setting mutants
+        if ( length(fixed) == 1 ) {
+                if ( fixed != "default" ) {
+                        fixedGene <- names(fixed)
+                        initialState[fixedGene] <- fixed[fixedGene]
+                        cat(initialState)
+                }
+        }
+        if ( length(fixed) > 1 ) {
+                fixedGenes <- names(fixed)
+                for (i in fixedGenes) {
+                        initialState[i] <- fixed[i]
+                }
+        }
 
         if ( class(net) == "BooleanNetwork" ) {
                 net.sq <- asContinuous(net,parameters = parameters)
@@ -94,7 +108,8 @@ squad <- function(net, initialState="random",
                                      func=net$squad,
                                      parms = parameters,
                                      atol=10e-6,
-                                     rtol=10e-6,...)
+                                     rtol=10e-6,
+                                     ...)
                 }
                 if ( type == "normHillCubes" ) {
                         dynamic<-ode(y=initialState,

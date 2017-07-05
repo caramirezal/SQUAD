@@ -30,6 +30,17 @@
 
 
 
+adjusTime <- function(value,timeInterval) {
+        if ( value < 0 | max(timeInterval) <= value) {
+                stop("One or more time events are not in the simulation time Interval!")
+        }
+        counter <- 1
+        while ( timeInterval[counter] <= value ) {
+                counter <- counter + 1
+        }
+        timeInterval[counter]
+}
+
 
 
 ###########################################################################################################################
@@ -42,6 +53,8 @@ squad <- function(net, initialState="random",
                   lengthInterval=0.01,
                   type = "squad",
                   fixed = "default",
+                  perturbations = FALSE,
+                  events = list(),
                   ...) {
 
         if ( ! ( class(net) %in% c("BooleanNetwork","squad") ) ) {
@@ -49,6 +62,13 @@ squad <- function(net, initialState="random",
         }
 
         times <- seq(0,timePeriod,by = lengthInterval)
+
+        if ( perturbations ) {
+                specs <- events
+                specs$time <- sapply(events$time,
+                                        function(x) adjusTime(x,times))
+        }
+
 
         if (length(initialState)==1) {
                 if (initialState=="random"){
@@ -85,27 +105,54 @@ squad <- function(net, initialState="random",
                                        parameters = parameters,
                                        fixed = fixed)
                 if ( type == "squad" ) {
-                        dynamic<-ode(y=initialState,
+                        if ( ! perturbations ) {
+                                dynamic<-ode(y=initialState,
                                      times=times,
                                      func=net.sq$squad,
                                      parms = parameters,
                                      fixed = fixed,
                                      atol=10e-6,
                                      rtol=10e-6,...)
+                        }
+                        if ( perturbations ) {
+                                dynamic<-ode(y=initialState,
+                                     times=times,
+                                     func=net.sq$squad,
+                                     parms = parameters,
+                                     fixed = fixed,
+                                     events = list(data=specs),
+                                     atol=10e-6,
+                                     rtol=10e-6,...)
+                        }
+
                 }
                 if ( type == "normHillCubes" ) {
-                        dynamic<-ode(y=initialState,
+                        if ( ! perturbations ) {
+                                dynamic<-ode(y=initialState,
                                      times=times,
                                      func=net.sq$normHillCubes,
                                      fixed = fixed,
                                      parms = parameters,
                                      atol=10e-6,
                                      rtol=10e-6,...)
+                        }
+                        if ( perturbations ) {
+                                dynamic<-ode(y=initialState,
+                                     times=times,
+                                     func=net.sq$normHillCubes,
+                                     fixed = fixed,
+                                     parms = parameters,
+                                     events = list(data=specs),
+                                     atol=10e-6,
+                                     rtol=10e-6,...)
+                        }
+
                 }
         }
         if ( class(net) == "squad" ) {
                 if ( type == "squad" ) {
-                        dynamic<-ode(y=initialState,
+                        if ( ! perturbations ) {
+                                dynamic<-ode(y=initialState,
                                      times=times,
                                      func=net$squad,
                                      parms = parameters,
@@ -113,6 +160,19 @@ squad <- function(net, initialState="random",
                                      atol=10e-6,
                                      rtol=10e-6,
                                      ...)
+                        }
+                        if ( perturbations ) {
+                                dynamic<-ode(y=initialState,
+                                     times=times,
+                                     func=net$squad,
+                                     parms = parameters,
+                                     fixed = fixed,
+                                     events = list(data=specs),
+                                     atol=10e-6,
+                                     rtol=10e-6,
+                                     ...)
+                        }
+
                 }
                 if ( type == "normHillCubes" ) {
                         net.sq <- net[c("interactions","genes","fixed")]
@@ -120,13 +180,25 @@ squad <- function(net, initialState="random",
                         net.sq <- asContinuous(net.sq,
                                                parameters = parameters,
                                                fixed = fixed)
-                        dynamic<-ode(y=initialState,
+                        if ( ! perturbations ) {
+                                dynamic<-ode(y=initialState,
                                      times=times,
                                      func=net.sq$normHillCubes,
                                      parms = parameters,
                                      fixed = fixed,
                                      atol=10e-6,
                                      rtol=10e-6,...)
+                        }
+                        if ( perturbations ) {
+                                dynamic<-ode(y=initialState,
+                                     times=times,
+                                     func=net.sq$normHillCubes,
+                                     parms = parameters,
+                                     fixed = fixed,
+                                     events = list(data=specs),
+                                     atol=10e-6,
+                                     rtol=10e-6,...)
+                        }
                 }
         }
         colnames(dynamic) <- c("time",net$genes)

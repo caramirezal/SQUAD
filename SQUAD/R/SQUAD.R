@@ -1,5 +1,6 @@
 
 decimalToBinary<-function(value,positions){
+        ## note that the binary vector is in inverse order
         val = value
         output <- rep(0,positions)
         counter <- 1
@@ -13,16 +14,21 @@ decimalToBinary<-function(value,positions){
 
 
 
+
 ####################################################################################################################################
 
 # Takes x or 1-x values according to conjunctive forms
 # of the variables
 eval.input<-function(plantilla,state){
         new.state<-rep(0,length(plantilla) )
-        for (i in 1:length(new.state) ){
-                if ( plantilla[i] == 0 ) { 
+        k <- length(new.state)
+        ## here the order is inverted because
+        ## plantilla is result of decimalToBinary function
+        ## See, decimalToBinary comments.
+        for ( i in 1:k ){
+                if ( plantilla[k-i+1] == 0 ) {
                         new.state[i] <- 1-state[i]
-                } else if ( plantilla[i] == 1 ) {
+                } else if ( plantilla[k-i+1] == 1 ) {
                         new.state[i] <- state[i]
                 } else {
                         print("Error: Non Boolean value")
@@ -41,14 +47,18 @@ defineDisjunction<-function(net,state,nodeIndex){
         nodeFunction<-net$interactions[[nodeIndex]][[2]]
         regulatorsIndexes<-net$interactions[[nodeIndex]][[1]]
         numberOfRegulators<-length(regulatorsIndexes)
-        for (i in 1:length(nodeFunction)){
+        ## nonZeros <-length(nodeFunction) - which(nodeFunction==1)
+        ## for i in length(nonZeros):1
+        n <- length(nodeFunction)
+        for (i in 1:n) {
                 conjunction<-decimalToBinary(i-1,numberOfRegulators)
-                conjunction<-rev(conjunction)
+                ## modificar aqui para quitar rev
+                ##conjunction<-rev(conjunction)
                 newInput<-eval.input(plantilla = conjunction,state[regulatorsIndexes])
                 value<-min(newInput)
                 disjunction<-c(disjunction,value)
         }
-        
+        ## modifcar para eliminar new.input y tomar solo non zero indexes
         return(disjunction)
 }
 

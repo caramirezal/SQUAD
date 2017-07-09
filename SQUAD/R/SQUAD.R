@@ -49,8 +49,8 @@ defineDisjunction<-function(net,state,nodeIndex){
         numberOfRegulators<-length(regulatorsIndexes)
         ## nonZeros <-length(nodeFunction) - which(nodeFunction==1)
         ## for i in length(nonZeros):1
-        n <- length(nodeFunction)
-        for (i in 1:n) {
+        nonZeros <- which(nodeFunction==1)
+        for (i in nonZeros) {
                 conjunction<-decimalToBinary(i-1,numberOfRegulators)
                 ## modificar aqui para quitar rev
                 ##conjunction<-rev(conjunction)
@@ -62,19 +62,6 @@ defineDisjunction<-function(net,state,nodeIndex){
         return(disjunction)
 }
 
-
-
-#####################################################################################################################################
-
-# vectorial product of the new continuous values
-# with the binary boolean function
-new.input<-function(disjunction,nodeFunction){
-        new.input<-rep(0,length(disjunction))
-        for (i in 1:length(disjunction)){
-                new.input[i]<-disjunction[i] * nodeFunction[i]
-        }
-        return(new.input)
-}
 
 
 
@@ -99,8 +86,8 @@ extractw<-function(net,state){
         w<-rep(0,length(net$genes))
         for (i in 1:length(net$genes)){
                 nodeFunction<-net$interactions[[i]][[2]]
-                disjunction<-defineDisjunction(net,state,i)
-                newInput<-new.input(disjunction,nodeFunction)
+                newInput<-defineDisjunction(net,state,i)
+                #newInput<-new.input(disjunction,nodeFunction)
                 w[i]<-max(newInput)
         }
         return(w)

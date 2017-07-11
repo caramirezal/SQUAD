@@ -55,6 +55,7 @@ squad <- function(net, initialState="random",
                   fixed = "default",
                   perturbations = FALSE,
                   events = list(),
+                  plot = "Null",
                   ...) {
 
         if ( ! ( class(net) %in% c("BooleanNetwork","squad") ) ) {
@@ -202,5 +203,12 @@ squad <- function(net, initialState="random",
                 }
         }
         colnames(dynamic) <- c("time",net$genes)
-        dynamic
+
+        if ( plot == "Null") {
+                return(dynamic)
+        }
+        if ( plot == "timeSerie") {
+                timeSerie.sq(dynamic)
+        }
+
 }

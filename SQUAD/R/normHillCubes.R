@@ -18,14 +18,19 @@
 #' head(sim)
 #'
 
-boolCubeFun <- function(boolInput,Input) {
+boolCubeFun <- function(net,boolInput,Input) {
         if ( length(boolInput) != 2**(length(Input)) ) {
                 stop("The boolean function has not length 2**(length(Input)) !")
         }
-        N <- 2**(length(Input))
+        if ( class(net) == "BooleanNetwork" ) {
+                nonZeros <- which( boolInput == 1 )
+        } else if ( class(net) == "squad" ) {
+                nonZeros <- net$interactions[[nodeIndex]]$nonZeros
+        }
+        #N <- 2**(length(Input))
         suma <- 0
         k <- length(Input)
-        for (i in 1:N )  {
+        for (i in nonZeros )  {
                 state <- decimalToBinary(i-1,length(Input))
                 ## This part can be optimized if the loop does not perform any action
                 ## when  boolInput[i] == 0/false
@@ -46,14 +51,14 @@ boolCubeFun <- function(boolInput,Input) {
 }
 
 
-boolCubeFunTest <- function(binVector){
-        k <- log2(length(binVector))
-        cat("boolean function: ",binVector,"\n")
-        for (i in 1:length(binVector)) {
-                input <- decimalToBinary(i-1,k)
-                cat(input," -> ", boolCubeFun(binVector,input) ,"\n")
-        }
-}
+#boolCubeFunTest <- function(binVector){
+#        k <- log2(length(binVector))
+#        cat("boolean function: ",binVector,"\n")
+#        for (i in 1:length(binVector)) {
+#                input <- decimalToBinary(i-1,k)
+#                cat(input," -> ", boolCubeFun(binVector,input) ,"\n")
+#        }
+#}
 
 
 #################################################################################################################################
@@ -69,7 +74,7 @@ asNormHillCube <- function(net,n,k,gamma,fixed="default"){
                                 for (i in 1:length(net$genes)) {
                                         regulators <- net$interactions[[i]]$input
                                         continuousInput <- hillFunNorm(state[regulators],n=n[i],k=k[i])
-                                        newState[i] <-  boolCubeFun(net$interactions[[i]]$func,continuousInput) - gamma[i]*state[i]
+                                        newState[i] <-  boolCubeFun(net,net$interactions[[i]]$func,continuousInput) - gamma[i]*state[i]
                                 }
                                 names(newState) <- net$genes
 

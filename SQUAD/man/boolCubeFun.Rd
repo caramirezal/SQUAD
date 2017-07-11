@@ -9,13 +9,13 @@ boolCubeFun(boolInput, Input)
 \arguments{
 \item{net}{a regulatory network model that belongs to "booleanNetwork" or "squad" class.}
 
-\item{n}{coefficient determines the level of the slope of the curve. A vector of 
+\item{n}{coefficient determines the level of the slope of the curve. A vector of
 length k. Where k is the number of nodes of the network.}
 
 \item{k}{coefficient determines the threshold which resembles boolean switch behavior.
 A vector of length k. Where k is the number of nodes of the network.}
 
-\item{gamma}{determines the dacay rate of the molecule. A vector of length k. Where k 
+\item{gamma}{determines the dacay rate of the molecule. A vector of length k. Where k
 is the number of nodes of the network.}
 }
 \description{

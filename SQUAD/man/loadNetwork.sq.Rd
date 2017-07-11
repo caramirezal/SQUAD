@@ -11,7 +11,7 @@ SQUAD(x, w, gamma, h)
 \item{fixed}{a vector of values in the range [0,1] to node values to be fixed.}
 }
 \description{
-Load a regulatory network model in squad format. It returns a squad object that 
+Load a regulatory network model in squad format. It returns a squad object that
 can be used to perform continuous simulations using interpolations of Boolean Regulatory
 network models
 }

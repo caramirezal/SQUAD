@@ -49,7 +49,12 @@ defineDisjunction<-function(net,state,nodeIndex){
         numberOfRegulators<-length(regulatorsIndexes)
         ## nonZeros <-length(nodeFunction) - which(nodeFunction==1)
         ## for i in length(nonZeros):1
-        nonZeros <- which(nodeFunction==1)
+        if ( class(net) == "BooleanNetwork" ) {
+                nonZeros <- which( nodeFunction == 1 )
+        } else if ( class(net) == "squad" ) {
+                nonZeros <- net$interactions[[nodeIndex]]$nonZeros
+        }
+
         for (i in nonZeros) {
                 conjunction<-decimalToBinary(i-1,numberOfRegulators)
                 ## modificar aqui para quitar rev

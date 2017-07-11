@@ -2,10 +2,10 @@
 % Please edit documentation in R/squad.R
 \name{squad}
 \alias{squad}
+\alias{adjusTime}
 \title{squad performs simulations of regulatory network models using the SQUAD methodology}
 \usage{
-squad(net, initialState = "random", parameters = "default",
-  timePeriod = 7.5, lengthInterval = 0.01, ...)
+adjusTime(value, timeInterval)
 }
 \arguments{
 \item{net}{an object of class "BooleanNetwork" or "SQUAD"}
@@ -14,15 +14,15 @@ squad(net, initialState = "random", parameters = "default",
 serves as initial values for the ODE system simulation.}
 
 \item{parameters}{a list containing two vectors of length n. Where n is the number of nodes
-of the network. The vectors are the beta and gamma parameters as that defined in 
+of the network. The vectors are the beta and gamma parameters as that defined in
 Mart\'inez-Sosa, 2013.}
 
-\item{...}{additional parameters passed to ode() solver function defined in the deSolve R Package 
+\item{...}{additional parameters passed to ode() solver function defined in the deSolve R Package
 developed by Soetaert, 2010.}
 }
 \description{
-Performs a variety simulations of Regulatory network models using the 
-SQUAD methodology. It can be used to set up different initial states, parameters and 
+Performs a variety simulations of Regulatory network models using the
+SQUAD methodology. It can be used to set up different initial states, parameters and
 also to simulate gain/loss of function mutants. It returns a trajectory of the system
 in different formats
 }
@@ -30,12 +30,12 @@ in different formats
 net <- loadNetwork("cartoonNetwork.R")
 getAttractorsAsynchronous(net)
 data("cellcycle")
-net.sq <- asContinuous(cellcycle) 
+net.sq <- asContinuous(cellcycle)
 initialState <- runif(length(cellcycle$genes),0,1)
-times <- seq(0,10,by=0.5)    
-h <- rep(50,length(cellcycle$genes))       
-gamma <- rep(1,length(cellcycle$genes))      
-parameters <- list(h,gamma)     
+times <- seq(0,10,by=0.5)
+h <- rep(50,length(cellcycle$genes))
+gamma <- rep(1,length(cellcycle$genes))
+parameters <- list(h,gamma)
 sim <- squad(net.sq)
-sim 
+sim
 }

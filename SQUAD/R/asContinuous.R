@@ -109,6 +109,10 @@ asContinuous <- function(net,parameters="default",fixed="default") {
 
         }
 
+        for (i in 1:length(res$genes)) {
+                res$interactions[[i]]$"nonZeros" <- which(res$interactions[[i]]$func==1)
+        }
+
         class(res) <- "squad"
         return(res)
 }

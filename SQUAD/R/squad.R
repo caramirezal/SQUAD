@@ -56,6 +56,7 @@ squad <- function(net, initialState="random",
                   perturbations = FALSE,
                   events = list(),
                   plot = "Null",
+                  indexes="default",
                   ...) {
 
         if ( ! ( class(net) %in% c("BooleanNetwork","squad") ) ) {
@@ -77,16 +78,6 @@ squad <- function(net, initialState="random",
                 }
         }
         names(initialState) <- net$genes
-        #if (length(parameters)==1) {
-
-        #        if (parameters=="default") {
-
-        #                gamma <- rep(1,length(net$genes))
-        #                h <- rep(50,length(net$genes))
-        #                parameters<-list(h,gamma)
-        #        }
-
-        #}
 
         ## setting mutants
         if ( length(fixed) == 1 ) {
@@ -208,7 +199,7 @@ squad <- function(net, initialState="random",
                 return(dynamic)
         }
         if ( plot == "timeSerie") {
-                timeSerie.sq(dynamic)
+                timeSerie.sq(dynamic,indexes = indexes)
         }
 
 }

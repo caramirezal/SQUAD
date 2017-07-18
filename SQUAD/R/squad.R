@@ -198,8 +198,11 @@ squad <- function(net, initialState="random",
         if ( plot == "Null") {
                 return(dynamic)
         }
-        if ( plot == "timeSerie") {
+        if ( plot == "timeSerie" ) {
                 timeSerie.sq(dynamic,indexes = indexes)
+        }
+        if ( plot == "heatmap" ) {
+                heatmap.sq(dynamic,indexes = indexes)
         }
 
 }

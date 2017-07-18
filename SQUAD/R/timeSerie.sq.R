@@ -39,7 +39,7 @@ timeSerie.sq <- function(dynamic,indexes="default") {
 
                 if (  length(dynamic[1,]) > length(colores)  ) {
 
-                        warning("Number of nodes exceeds the maximum number of printable genes. Just the first 13 will be plotted.")
+                        warning("Number of nodes exceeds the maximum number of printable genes. Just the first 10 will be plotted.")
 
                         indexes <- 1:length(colores)
 
@@ -54,7 +54,7 @@ timeSerie.sq <- function(dynamic,indexes="default") {
 
                         indexes <- indexes[1:length(colores)]
 
-                        warning("Non default given indexes are more than the maximum number of printable genes.\nOnly the first 26 will be plotted")
+                        warning("Non default given indexes are more than the maximum number of printable genes.\nOnly the first 10 will be plotted")
 
                 }
         }
@@ -63,7 +63,7 @@ timeSerie.sq <- function(dynamic,indexes="default") {
         lineType<-rep(1,length(indexes))
         timePeriod <- times[length(times)]
 
-        par(mar=c(6,6,2,9))
+        par(mar=c(6,6,2,8),xpd=TRUE)
         plot(times,dynamic[,indexes[1]],col=colores[1],
              ylim = c(0,1),
              ylab = "Node Level of activation",

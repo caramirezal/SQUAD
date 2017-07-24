@@ -92,6 +92,7 @@ squad <- function(net, initialState="random",
                 initialState[fixedGenes] <- fixed[fixedGenes]
         }
 
+        #initialState <- unname(initialState)
         if ( class(net) == "BooleanNetwork" ) {
                 net.sq <- asContinuous(net,
                                        parameters = parameters,

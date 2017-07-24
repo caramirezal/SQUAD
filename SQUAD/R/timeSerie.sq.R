@@ -80,7 +80,7 @@ timeSerie.sq <- function(dynamic,indexes="default") {
         }
         legend(timePeriod + 0.05*timePeriod,
                y=1,
-               cex = 0.8,
+               cex = 1,
                legend=etiquetas[indexes],
                lwd = 2.5,
                lty=lineType,

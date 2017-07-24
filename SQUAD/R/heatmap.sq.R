@@ -36,7 +36,7 @@ heatmap.sq <- function(sim, indexes="default") {
                         rownames(sim)[length(times)] <- times[length(times)]
 
                         heatmap(sim,Rowv = NA,Colv = NA,ylab = "Time",cexRow = 1,
-                                col=colorRampPalette(c("black","green"))(6))
+                                col=colorRampPalette(c("black","green"))(20) )
                 }
         }
 
@@ -48,7 +48,7 @@ heatmap.sq <- function(sim, indexes="default") {
                 rownames(sim)[length(times)] <- times[length(times)]
 
                 heatmap(sim[,indexes],Rowv = NA,Colv = NA,ylab = "Time",cexRow = 1,
-                        col=colorRampPalette(c("black","green"))(6) )
+                        col=colorRampPalette(c("black","green"))(20) )
 
         }
 }

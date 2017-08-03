@@ -42,8 +42,8 @@ asContinuous <- function(net,parameters="default",fixed="default") {
         if ( class(net) == "BooleanNetwork") {
                 res <- list("genes" = net$genes, "interactions"=net$interactions,
                             "fixed" = net$fixed)
-                if ( ! ( length(parameters) %in% c(1,2) ) ) {
-                        stop("The 'parameters' argument most contain two numerical vectors or be set to 'default'. ")
+                if ( ! ( length(parameters) %in% c(1,2,3) ) ) {
+                        stop("The 'parameters' argument most contain two or three numerical vectors or be set to 'default'. ")
                 }
                 network <- function(times,state,parameters,fixed) {
                         with(as.list(c(state,parameters,fixed)),{
@@ -56,8 +56,8 @@ asContinuous <- function(net,parameters="default",fixed="default") {
                                         }
                                 }
                                 if ( length(parameters) > 1 ) {
-                                        h<-parameters[[1]]
-                                        gamma<-parameters[[2]]
+                                        h<-parameters$h
+                                        gamma<-parameters$gamma
                                 }
                                 w <- extractw(net,state)
                                 names(w) <- net$genes
@@ -88,9 +88,9 @@ asContinuous <- function(net,parameters="default",fixed="default") {
                 res$"squad" <- network
 
                 # BoolNet to normHillCube
-                        if ( ! ( length(parameters) %in% c(1,3) ) ) {
-                                stop("The 'parameters' argument most contain three numerical vectors or be set to 'default'. ")
-                        }
+                        #if ( ! ( length(parameters) %in% c(1,3) ) ) {
+                        #        stop("The 'parameters' argument most contain three numerical vectors or be set to 'default'. ")
+                        #}
                         ## Setting parameters
                         if (length(parameters)==1) {
                                 if (parameters=="default") {
@@ -99,11 +99,7 @@ asContinuous <- function(net,parameters="default",fixed="default") {
                                         gamma <- rep(1,length(net$genes))
                                 }
                         }
-                        if ( length(parameters) > 1 ) {
-                                n <- parameters[[1]]
-                                k <- parameters[[2]]
-                                gamma <- parameters[[3]]
-                        }
+
                         network.hc <- asNormHillCube(net,n=n,k=k,gamma = gamma)
                         res$"normHillCubes" <- network.hc
 

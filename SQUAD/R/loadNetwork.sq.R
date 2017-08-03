@@ -21,8 +21,7 @@ SQUAD<-function(x,w,gamma,h){
 
 
 ## parse w equations into a deSolve function
-wToSQUAD <- function(genes,wExpressions,fixed="default"){
-
+wToSQUAD <- function(genes,wExpressions,fixed="default",parameters="default"){
         ## define checkpoints in this part for genes, wExpression
         ## and fixed
        squadODEs <- function(times,state,parameters,fixed){
@@ -37,8 +36,13 @@ wToSQUAD <- function(genes,wExpressions,fixed="default"){
                                                                                                gamma = 1, h = 50))
                                 }
                         } else {
-                                evalSQUAD <- sapply(1:length(genes), function(i) SQUAD(x = state[i], w= w[i],
-                                                                                       gamma = gamma[i], h = h[i]))
+                                h<-parameters$h
+                                gamma<-parameters$gamma
+                                # applying SQUAD
+                                evalSQUAD <- sapply(1:length(genes), function(i) SQUAD(x = state[i],
+                                                                                       w= w[i],
+                                                                                       gamma = gamma[i],
+                                                                                       h = h[i]))
                         }
 
                         ## definition of mutants
@@ -237,3 +241,8 @@ vectRepresentation <- function(nodeNames,inputs,boolExpression) {
 
 }
 
+# squad generic function
+SQUAD<-function(x,w,gamma,h){
+        val <- ((-exp(0.5*h) + exp(-h*(w-0.5))) / ((1-exp(0.5*h)) * (1+exp(-h*(w-0.5))))) - (gamma*x)
+        return(val)
+}

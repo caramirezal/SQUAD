@@ -21,7 +21,7 @@ the indexes of the nodes to be plotted. Default values are the first 13 nodes of
 number of nodes curves are 13.}
 
 \item{parameters}{a list with to vectors. Each vector has length equal to the number of nodes of the network.
-The vectors correspond to h and gamma parameters needed to define the squad ODE system as that defined in 
+The vectors correspond to h and gamma parameters needed to define the squad ODE system as that defined in
 Mart\'inez-Sosa, 2013.}
 
 \item{timePeriod}{the virtual time duration of the simulation.}
@@ -29,7 +29,7 @@ Mart\'inez-Sosa, 2013.}
 \item{lengthInterval}{the time steps for integration to be shown. The lesser length interval provided the better
 resolution of the curves would be.}
 
-\item{...}{additional parameters passed to ode() solver function defined in the deSolve R Package 
+\item{...}{additional parameters passed to ode() solver function defined in the deSolve R Package
 developed by Soetaert, 2010.}
 }
 \description{

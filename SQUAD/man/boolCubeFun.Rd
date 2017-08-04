@@ -4,7 +4,7 @@
 \alias{boolCubeFun}
 \title{asnormHillCube transform a boolean regulatory network to hill cube continuous interpolation.}
 \usage{
-boolCubeFun(boolInput, Input)
+boolCubeFun(net, boolInput, Input)
 }
 \arguments{
 \item{net}{a regulatory network model that belongs to "booleanNetwork" or "squad" class.}

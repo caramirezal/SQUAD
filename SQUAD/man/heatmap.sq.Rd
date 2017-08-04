@@ -14,7 +14,7 @@ of applying the ode() solver function.}
 \item{indexes}{a vector of numerical or integer which corresponds to the node indexes are to be plotted.}
 }
 \description{
-draw a heatmap of the simulation of a trajectory of the regulatory network using a 
+draw a heatmap of the simulation of a trajectory of the regulatory network using a
 a continuous formalism.
 }
 \examples{

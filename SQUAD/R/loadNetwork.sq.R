@@ -30,19 +30,26 @@ wToSQUAD <- function(genes,wExpressions,fixed="default",parameters="default"){
                                 assign(genes[i],state[i])
                         }
                         w <- sapply(wExpressions, function(x) eval(parse(text=x)))
+                        evalSQUAD <- rep(0,length(genes))
                         if (length(parameters)==1) {
                                 if (parameters=="default") {
-                                        evalSQUAD <- sapply(1:length(genes), function(i) SQUAD(x = state[i], w= w[i],
-                                                                                               gamma = 1, h = 50))
+                                        for (i in 1:length(evalSQUAD)) {
+                                                evalSQUAD[i] <- squadFun(x = state[i],
+                                                                      w = w[i],
+                                                                      gamma = 1,
+                                                                      h = 50)
+                                        }
                                 }
                         } else {
                                 h<-parameters$h
                                 gamma<-parameters$gamma
                                 # applying SQUAD
-                                evalSQUAD <- sapply(1:length(genes), function(i) SQUAD(x = state[i],
-                                                                                       w= w[i],
-                                                                                       gamma = gamma[i],
-                                                                                       h = h[i]))
+                                for (i in 1:length(evalSQUAD)) {
+                                        evalSQUAD[i] <- squadFun(x = state[i],
+                                                              w = w[i],
+                                                              gamma = gamma[i],
+                                                              h = h[i])
+                                }
                         }
 
                         ## definition of mutants
@@ -241,8 +248,4 @@ vectRepresentation <- function(nodeNames,inputs,boolExpression) {
 
 }
 
-# squad generic function
-SQUAD<-function(x,w,gamma,h){
-        val <- ((-exp(0.5*h) + exp(-h*(w-0.5))) / ((1-exp(0.5*h)) * (1+exp(-h*(w-0.5))))) - (gamma*x)
-        return(val)
-}
+

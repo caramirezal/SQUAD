@@ -49,18 +49,47 @@ adjusTime <- function(value,timeInterval) {
 ## Modificar squad solo debe dar como output el resultado del odeSOlver
 ## teniendo como parámetros si se una un objecto de BoolNet o de SQUAD
 squad <- function(net, initialState="random",
-                  parameters="default", timePeriod=7.5,
+                  parameters="default",
+                  timePeriod=7.5,
                   lengthInterval=0.01,
                   type = "squad",
                   fixed = "default",
                   perturbations = FALSE,
                   events = list(),
                   plot = "timeSerie",
-                  indexes="default",
+                  indexes = "default",
+                  atol = 10e-6,
+                  rtol =10e-6,
                   ...) {
 
         if ( ! ( class(net) %in% c("BooleanNetwork","squad") ) ) {
                 stop('A net object of class "BooleanNetwork" or "squad" most be provided!')
+        }
+
+        if ( ! ( type %in% c("squad","normHillCubes") ) ) {
+                stop("type most be a character string in c('squad','normHillCubes')")
+        }
+
+        if ( length(parameters) == 1 && parameters != "default" ) {
+                stop("Please provide a valid list of parameters values or set to 'default'")
+        }
+
+        if ( length(parameters) > 1 ) {
+                if ( type == "normHillCubes" ) {
+                        if ( ! ( length(parameters) == 3 ) ) {
+                                stop("Parameters most be a list of three numeric vectors")
+                        }
+                        n <- parameters$n
+                        k <- parameters$k
+                        gamma <- parameters$gamma
+                }
+                if ( type == "squad" ) {
+                        if ( ! ( length(parameters) == 2 ) ) {
+                                stop("Paramters most be a list of two numeric vectors")
+                        }
+                        h <- parameters$h
+                        gamma <- parameters$gamma
+                }
         }
 
         times <- seq(0,timePeriod,by = lengthInterval)
@@ -71,19 +100,7 @@ squad <- function(net, initialState="random",
                                         function(x) adjusTime(x,times))
         }
 
-        if ( type == "normHillCubes" ) {
-                if ( length(parameters) > 1 ) {
-                        n <- parameters$n
-                        k <- parameters$k
-                        gamma <- parameters$gamma
-                }
-        }
-        if ( type == "squad" ) {
-                if ( length(parameters) > 1 ) {
-                        h <- parameters$h
-                        gamma <- parameters$gamma
-                }
-        }
+
 
         if (length(initialState)==1) {
                 if (initialState=="random"){
@@ -117,8 +134,8 @@ squad <- function(net, initialState="random",
                                      func=net.sq$squad,
                                      parms = parameters,
                                      fixed = fixed,
-                                     atol=10e-6,
-                                     rtol=10e-6,...)
+                                     atol=atol,
+                                     rtol=rtol,...)
                         }
                         if ( perturbations ) {
                                 dynamic<-ode(y=initialState,
@@ -127,8 +144,8 @@ squad <- function(net, initialState="random",
                                      parms = parameters,
                                      fixed = fixed,
                                      events = list(data=specs),
-                                     atol=10e-6,
-                                     rtol=10e-6,...)
+                                     atol=atol,
+                                     rtol=rtol,...)
                         }
 
                 }
@@ -139,8 +156,8 @@ squad <- function(net, initialState="random",
                                      func=net.sq$normHillCubes,
                                      fixed = fixed,
                                      parms = parameters,
-                                     atol=10e-6,
-                                     rtol=10e-6,...)
+                                     atol = atol,
+                                     rtol = rtol,...)
                         }
                         if ( perturbations ) {
                                 dynamic<-ode(y=initialState,
@@ -149,8 +166,8 @@ squad <- function(net, initialState="random",
                                      fixed = fixed,
                                      parms = parameters,
                                      events = list(data=specs),
-                                     atol=10e-6,
-                                     rtol=10e-6,...)
+                                     atol = atol,
+                                     rtol = rtol,...)
                         }
 
                 }
@@ -163,8 +180,8 @@ squad <- function(net, initialState="random",
                                      func=net$squad,
                                      parms = parameters,
                                      fixed = fixed,
-                                     atol=10e-6,
-                                     rtol=10e-6,
+                                     atol = atol,
+                                     rtol = rtol,
                                      ...)
                         }
                         if ( perturbations ) {
@@ -174,8 +191,8 @@ squad <- function(net, initialState="random",
                                      parms = parameters,
                                      fixed = fixed,
                                      events = list(data=specs),
-                                     atol=10e-6,
-                                     rtol=10e-6,
+                                     atol = atol,
+                                     rtol = rtol,
                                      ...)
                         }
 
@@ -192,8 +209,8 @@ squad <- function(net, initialState="random",
                                      func=net.sq$normHillCubes,
                                      parms = parameters,
                                      fixed = fixed,
-                                     atol=10e-6,
-                                     rtol=10e-6,...)
+                                     atol = atol,
+                                     rtol = rtol,...)
                         }
                         if ( perturbations ) {
                                 dynamic<-ode(y=initialState,
@@ -202,8 +219,8 @@ squad <- function(net, initialState="random",
                                      parms = parameters,
                                      fixed = fixed,
                                      events = list(data=specs),
-                                     atol=10e-6,
-                                     rtol=10e-6,...)
+                                     atol = atol,
+                                     rtol = rtol,...)
                         }
                 }
         }
@@ -327,7 +344,7 @@ extractw<-function(net,state){
 ##################################################################################################################################
 
 # squad generic function
-SQUAD<-function(x,w,gamma,h){
+squadFun<-function(x,w,gamma,h){
         val <- ((-exp(0.5*h) + exp(-h*(w-0.5))) / ((1-exp(0.5*h)) * (1+exp(-h*(w-0.5))))) - (gamma*x)
         return(val)
 }

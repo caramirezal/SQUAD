@@ -1,4 +1,4 @@
-#' @export
+#' @export asContinuous
 #' @description asContinuous transforms a boolean regulatory network model in BooleanNet format to
 #' a continuous model object that can be supplied to ode() function from deSolve R package
 #' Algorithm:
@@ -63,7 +63,7 @@ asContinuous <- function(net,parameters="default",fixed="default") {
                                 names(w) <- net$genes
                                 # applying SQUAD
                                 for (i in 1:length(net$genes)){
-                                        newState.vect[i] <- SQUAD(x=state[i],
+                                        newState.vect[i] <- squadFun(x=state[i],
                                                                 w=w[i],
                                                                 gamma = gamma[i],
                                                                 h=h[i])

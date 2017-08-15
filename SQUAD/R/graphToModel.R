@@ -4,12 +4,12 @@
 #' @details Algorithm:
 #' Let A be the matrix of conectivity where {a_ij} = 1 (-1) iff the node i is positive (negative) regulator
 #' and 0 if there is no interaction.
-#' let positives (negatives) be the boolean input of the positive (negative) regulators. 
+#' let positives (negatives) be the boolean input of the positive (negative) regulators.
 #' define b = min ( max(positives), 1 - max(negatives)  )
 #' That is, it is assumed that the node j is going to be active iff at leat one of the positive regulators
-#' is active and none of the negative regulators are active. 
-#' let k be the number of regulators and f be the boolean function for the node i to be defined. 
-#' f is a vector of boolean values of length 2**k that maps 
+#' is active and none of the negative regulators are active.
+#' let k be the number of regulators and f be the boolean function for the node i to be defined.
+#' f is a vector of boolean values of length 2**k that maps
 #' every boolean vector input of length k (ordered according to node indexes) to a boolean value.
 #' 1. Define an object of the class net BoolNet format.
 #' 2. Traverse the column of A[,j] and extract positive and negative regulators.
@@ -30,7 +30,7 @@
 # Transform a static representation of a regulatory network
 # to a dynamic Boolean discrete model
 graphToModel<-function(conectivityMatrix){
-        # define the net list object 
+        # define the net list object
         interactions<-list()
         genes<-list()
         fixed<-list()
@@ -46,7 +46,7 @@ graphToModel<-function(conectivityMatrix){
                         vector[j]<-input[j]
                 }
                 fun<-getBooleanFunction(conectivityMatrix,i)
-                expression<-" min( max(positive), 1 - max(negative) ) "
+                expression<-" "
                 network$interactions[[i]]<-pairlist(sort(vector),fun,expression)
                 names(network$interactions[[i]])<-c("input","fun","expression")
         }
@@ -55,7 +55,12 @@ graphToModel<-function(conectivityMatrix){
         network[[2]]<-colnames(conectivityMatrix)
         fixed<-rep(-1,length(conectivityMatrix[1,]) )
         names(fixed)<-rownames(conectivityMatrix)
-        network[[3]]<-fixed
+        network[[3]]<- fixed
+        expressions <- makeExpression(network)
+        for ( i in 1:length(network$genes) ) {
+                network$interactions[[i]][[3]] <- expressions[i]
+        }
+        class(network) <- "BooleanNetwork"
         return(network)
 }
 
@@ -79,14 +84,14 @@ getRegulators<-function(matrix,nodeIndex){
   if (length(positive.r)>0){
     names(positive.r)<-rownames(matrix)[positive.r]
   }
-  if (length(negative.r)>0){  
+  if (length(negative.r)>0){
     names(negative.r)<-rownames(matrix)[negative.r]
   }
   return(list(positive.r,negative.r))
 }
 
 # test getRegulators()
-testGetRegulators<-function(){ 
+testGetRegulators<-function(){
   A<-matrix(0,10,10)
   for (i in 1:length(A[,1])){
     for (j in 1:length(A[1,])){
@@ -116,7 +121,7 @@ testGetRegulators<-function(){
 ########################################################################################################################
 
 # Auxiliary function to test the order in which f is defined in boolNet format
-trueTableTest<-function(net){ 
+trueTableTest<-function(net){
   for (i in 1:length(net$genes)) {
     nmOfNodes<-length(net$genes)
     cat("Node: ",net$genes[i],"\n")
@@ -156,14 +161,14 @@ getBooleanFunction<-function(matrix,nodeIndex){
       # input most be reversed
       input<-rev(input)
       names(input)<-names.r
-      if ( ( length(positive.r)>0 ) & (length(negative.r) >0) ){ 
+      if ( ( length(positive.r)>0 ) & (length(negative.r) >0) ){
         f[i]<-min( max( input[names(positive.r)] )  ,1 - max( input[names(negative.r)] ) )
       }
       if ( ( length(positive.r) > 0 ) & ( length(negative.r) == 0 ) ) {
-        f[i]<-max( input[names(positive.r)] )  
+        f[i]<-max( input[names(positive.r)] )
       }
       if ( ( length(positive.r) == 0 ) & ( length(negative.r) > 0 ) ) {
-        f[i]<- 1 - max( input[names(negative.r)] )  
+        f[i]<- 1 - max( input[names(negative.r)] )
       }
       #cat(input[names(positive.r)]," ",input[names(negative.r)] ," -> ",f[i],"\n")
     }

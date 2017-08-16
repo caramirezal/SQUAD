@@ -92,7 +92,6 @@ getRegulators.sq <- function(net.df) {
 
 ## defines a function input for ode solver importing w parameters of SQUAD format
 loadNetwork.sq <- function(file,fixed="default"){
-
         firstLine <- readLines(file,1)
         ## check format
         if ( ! ( grepl("targets",firstLine) && grepl("factors",firstLine) ) ) {
@@ -154,6 +153,11 @@ loadNetwork.sq <- function(file,fixed="default"){
                                        fixed = fixed)
         net.sq$"normHillCubes" <- net.continuous$normHillCubes
 
+        # adding boolean expressions
+        expressions <- makeExpression(net.sq)
+        for (i in 1:length(net.sq$genes)) {
+                net.sq$interactions[[i]][[3]] <- expressions[i]
+        }
         class(net.sq) <- "squad"
         net.sq
 }

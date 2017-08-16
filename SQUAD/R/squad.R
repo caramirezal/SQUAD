@@ -48,9 +48,10 @@ adjusTime <- function(value,timeInterval) {
 # plot time serie as a heatmap
 ## Modificar squad solo debe dar como output el resultado del odeSOlver
 ## teniendo como parámetros si se una un objecto de BoolNet o de SQUAD
-squad <- function(net, initialState="random",
-                  parameters="default",
-                  timePeriod=7.5,
+squad <- function(net,
+                  initialState= "random",
+                  parameters= "default",
+                  timePeriod= 7.5,
                   lengthInterval=0.01,
                   type = "squad",
                   fixed = "default",
@@ -59,7 +60,8 @@ squad <- function(net, initialState="random",
                   plot = "timeSerie",
                   indexes = "default",
                   atol = 10e-6,
-                  rtol =10e-6,
+                  rtol = 10e-6,
+                  colorLevels = 20,
                   ...) {
 
         if ( ! ( class(net) %in% c("BooleanNetwork","squad") ) ) {
@@ -233,7 +235,7 @@ squad <- function(net, initialState="random",
                 timeSerie.sq(dynamic,indexes = indexes)
         }
         if ( plot == "heatmap" ) {
-                heatmap.sq(dynamic,indexes = indexes)
+                heatmap.sq(dynamic,indexes = indexes,colorLevels = colorLevels)
         }
 
 }

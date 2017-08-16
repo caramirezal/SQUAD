@@ -68,14 +68,14 @@ timeSerie.sq <- function(dynamic,indexes="default") {
              ylim = c(0,1),
              ylab = "Node Level of activation",
              xlab = "Time",
-             type = "l",lwd=2.5,frame.plot = TRUE)
+             type = "l",lwd=3,frame.plot = TRUE)
 
         for (i in 2:( length(indexes) ) ){
 
                 color <- colores[i]
 
                 lines(times,dynamic[,indexes[i]],
-                      col=color,type = "l",lwd=2.5)
+                      col=color,type = "l",lwd=3)
 
         }
         legend(timePeriod + 0.05*timePeriod,

@@ -14,7 +14,7 @@
 #' sim <- squad(cellcycle.sq,initialState = generateState(cellcycle,specs = c("CycD"=1)))
 #' heatmap.sq(sim,indexes = c(1,2,3,4))
 
-heatmap.sq <- function(sim, indexes="default") {
+heatmap.sq <- function(sim, indexes="default",colorLevels=4) {
 
         correctDefault <- ( length(indexes) == 1 ) && ( indexes == "default" )
 
@@ -36,7 +36,7 @@ heatmap.sq <- function(sim, indexes="default") {
                         rownames(sim)[length(times)] <- times[length(times)]
 
                         heatmap(sim,Rowv = NA,Colv = NA,ylab = "Time",cexRow = 1,
-                                col=colorRampPalette(c("black","green"))(20) )
+                                col=colorRampPalette(c("black","green"))(colorLevels) )
                 }
         }
 
@@ -48,7 +48,7 @@ heatmap.sq <- function(sim, indexes="default") {
                 rownames(sim)[length(times)] <- times[length(times)]
 
                 heatmap(sim[,indexes],Rowv = NA,Colv = NA,ylab = "Time",cexRow = 1,
-                        col=colorRampPalette(c("black","green"))(20) )
+                        col=colorRampPalette(c("black","green"))(colorLevels) )
 
         }
 }

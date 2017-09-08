@@ -3,7 +3,7 @@ Standardized Qualitative Analysis of Dynamical Systems
 
 The aim of the proyect is to implement the updated version of the Standardized Qualitative Analysis of Dynamical Systems (SQUAD) method described in Martínez-Sosa in 2013 (1), as modified from the first version in Di Cara, 2007 (2). The project is writen in R language.
 
-*Dependencies*
+## Dependencies
 
 Prior to use the SQUAD R package please install the following packages:
 

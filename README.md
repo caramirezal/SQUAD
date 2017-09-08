@@ -11,7 +11,7 @@ Prior to use the SQUAD R package please install the following packages:
 * BoolNet
 * reshape2
 
-See the documentation of the project (here)[https://caramirezal.github.io/squadTutorial/index.html].
+See the documentation of the project [here](https://caramirezal.github.io/squadTutorial/index.html).
 
 References
 

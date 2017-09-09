@@ -1,15 +1,34 @@
 # SQUAD
-Standardized Qualitative Analysis of Dynamical Systems 
+## Standardized Qualitative Analysis of Dynamical Systems 
 
-The aim of the proyect is to implement the updated version of the Standardized Qualitative Analysis of Dynamical Systems (SQUAD) method described in Martínez-Sosa in 2013 (1), as modified from the first version in Di Cara, 2007 (2). The project is writen in R language.
+The aim of the proyect is to implement the updated version of the Standardized Qualitative Analysis of Dynamical Systems (SQUAD) method described in Martínez-Sosa in 2013 (1), as modified from the first version in Di Cara, 2007 (2). 
 
-## Dependencies
 
-Prior to use the SQUAD R package please install the following packages:
+### BRN continuous interpolation
 
-* deSolve
-* BoolNet
-* reshape2
+SQUAD automate Boolean Regulatory Network (BRN) transformation
+to continuous models. 
+
+```r
+library(SQUAD)
+
+## loading BRN model
+data("cellcycle") 
+cellcycle
+
+## BRN to continuous transformation
+cellcycle.sq <- asContinuous(cellcycle) 
+ 
+## initial State definition 
+initialState <- rep(0,length(cellcycle$genes)) 
+ 
+## running simulation 
+squad(cellcycle, 
+       initialState = initialState) 
+```
+
+![](startingFromDiscrete.png)
+
 
 See the documentation of the project [here](https://caramirezal.github.io/squadTutorial/index.html).
 

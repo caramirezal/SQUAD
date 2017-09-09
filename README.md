@@ -27,7 +27,7 @@ squad(cellcycle,
        initialState = initialState) 
 ```
 
-![](startingFromDiscrete.png)
+![](figures/startingFromDiscrete.png)
 
 
 See the documentation of the project [here](https://caramirezal.github.io/squadTutorial/index.html).

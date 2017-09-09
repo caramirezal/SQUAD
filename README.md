@@ -6,7 +6,7 @@ The aim of the proyect is to implement the updated version of the Standardized Q
 
 ### BRN continuous interpolation
 
-SQUAD automate Boolean Regulatory Network (BRN) transformation
+SQUAD automates Boolean Regulatory Network (BRN) transformation
 to continuous models. 
 
 ```r

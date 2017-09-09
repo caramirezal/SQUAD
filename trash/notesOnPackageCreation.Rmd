@@ -1,0 +1,27 @@
+---
+title: "R Package Creation"
+output: html_notebook
+---
+
+[R Markdown](http://rmarkdown.rstudio.com) 
+
+
+library(devtools)
+library(roxygen2)
+
+#create("SQUAD")
+
+setwd("~/scripts/SQUAD/SQUAD/")
+document()
+
+setwd("../")
+install("SQUAD")
+
+library(SQUAD)
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+

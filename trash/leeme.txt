@@ -1,0 +1,30 @@
+March 8
+Munich, Deutschland.
+
+
+To compile and execute the ginsim test in a terminal use te following commands 
+
+// compilling
+> javac -cp "ginsim.jar" testGINSIM.java 
+
+// running
+> java -cp ".:ginsim.jar" testGINSIM
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+
+In order to use the rJava R library java most be set properly with the following commands:
+
+> /usr/lib/jvm/java-8-oracle/jre/lib/amd64
+> /usr/lib/jvm/java-8-oracle/jre/lib/amd64/server
+
+
+See the next reference
+
+https://stackoverflow.com/questions/12872699/error-unable-to-load-installed-packages-just-now/25932828#25932828?newreg=355546cf7dd64fa2a26de0ac0ad3fdeb
+
+
+And the installing the library in the terminal using the next line
+
+> sudo apt-get install r-cran-rjava
